@@ -13,6 +13,9 @@ const Customers = ({ navigation }) => {
 
     useEffect(() => {
         const subscriber = auth.onAuthStateChanged(user => {
+            if (!user) {
+                navigation.navigate('Login')
+            }
             db.collection('users')
                 .doc(user.uid)
                 .collection('customers')

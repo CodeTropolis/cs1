@@ -15,7 +15,7 @@ const Login = ({ navigation }) => {
         const unsubscribe = auth.onAuthStateChanged(authUser => {
             // console.log(`@CodeTropolis ~ useEffect ~ authUser`, authUser);
             if (authUser) {
-                // navigation.replace('Subscribe')
+                navigation.replace('Customers')
             }
         });
         // useEffect has a cleanup function
