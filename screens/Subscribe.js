@@ -7,24 +7,15 @@ import { validateReceipt } from '../services/validateReceipt';
 const Subscribe = ({ navigation }) => {
 
     const items = Platform.select({
-        ios: ['yearly_basic', 'monthly_basic'],
+        ios: ['basic_monthly'],
         android: ['']
     });
 
     const [products, setProducts] = useState({});
 
     useEffect(() => {
-        // IAP.initConnection()
-        //     .then(() => {
-        //         console.log('@CodeTropolis Connected to store.');
-
-        //     })
-        //     .catch(() => {
-        //         console.log('@CodeTropolis Error connecting to store.');
-        //     });
         IAP.getSubscriptions(items)
             .then((res) => {
-                console.log(`@CodeTropolis ~ .then ~ res`, res);
                 setProducts(res);
             })
             .catch((error) => console.log(`@CodeTropolis ~ error getting subscriptions: `, JSON.stringify(error)))

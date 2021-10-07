@@ -36,11 +36,9 @@ export default function App() {
         console.log('@CodeTropolis Connected to store.');
         IAP.getPurchaseHistory()
           .then(async res => {
-            console.log(`@CodeTropolis ~ .then ~ res`, res);
             const receipt = res[res.length - 1].transactionReceipt // The most recent receipt.
             // const receipt = res[0].transactionReceipt
             if (receipt) {
-              console.log(`@CodeTropolis ~ .then ~ receipt`, receipt);
               const subscriptionStatus = await validateReceipt(receipt);
               if (subscriptionStatus.isExpired) {
                 setSubscriptionIsExpired(true);
