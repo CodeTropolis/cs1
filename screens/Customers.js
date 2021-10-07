@@ -12,11 +12,11 @@ const Customers = ({ navigation }) => {
     const [customers, setCustomers] = useState([]);
 
     useEffect(() => {
-        const subscriber = auth.onAuthStateChanged(user => {
+        const authSubscriber = auth.onAuthStateChanged(user => {
             if (!user) {
                 navigation.navigate('Login')
             }
-            db.collection('users')
+            const snapshotSubscriber = db.collection('users')
                 .doc(user.uid)
                 .collection('customers')
                 .onSnapshot(documentSnapshot => {
@@ -30,7 +30,10 @@ const Customers = ({ navigation }) => {
 
         })
         // Stop listening for updates when no longer required
-        return () => subscriber;
+        return () => {
+            authSubscriber();
+            authSubscriber.snapshotSubscriber();
+        }
     }, [])
 
 
