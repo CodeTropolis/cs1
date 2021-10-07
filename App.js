@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Platform, Button, Alert, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-// import Register from './screens/Register';
-// import Customers from './screens/Customers';
-// import Login from './screens/Login';
-// import AddCustomer from './screens/AddCustomer';
+import Register from './screens/Register';
+import Customers from './screens/Customers';
+import Login from './screens/Login';
+import AddCustomer from './screens/AddCustomer';
 import Subscribe from './screens/Subscribe';
 import IAP from 'react-native-iap';
 import { validateReceipt } from './services/validateReceipt';
