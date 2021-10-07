@@ -14,19 +14,20 @@ const Subscribe = ({ navigation }) => {
     const [products, setProducts] = useState({});
 
     useEffect(() => {
-        IAP.initConnection()
-            .then(() => {
-                console.log('@CodeTropolis Connected to store.');
-                IAP.getSubscriptions(items)
-                    .then((res) => {
-                        console.log(`@CodeTropolis ~ .then ~ res`, res);
-                        setProducts(res);
-                    })
-                    .catch((error) => console.log(`@CodeTropolis ~ .then ~ error`, JSON.stringify(error)))
+        // IAP.initConnection()
+        //     .then(() => {
+        //         console.log('@CodeTropolis Connected to store.');
+
+        //     })
+        //     .catch(() => {
+        //         console.log('@CodeTropolis Error connecting to store.');
+        //     });
+        IAP.getSubscriptions(items)
+            .then((res) => {
+                console.log(`@CodeTropolis ~ .then ~ res`, res);
+                setProducts(res);
             })
-            .catch(() => {
-                console.log('@CodeTropolis Error connecting to store.');
-            });
+            .catch((error) => console.log(`@CodeTropolis ~ error getting subscriptions: `, JSON.stringify(error)))
 
         const purchaseErrorSubscription = IAP.purchaseErrorListener(error => {
             if (error.responseCode === '2') {

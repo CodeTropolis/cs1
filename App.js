@@ -14,6 +14,11 @@ import { validateReceipt } from './services/validateReceipt';
 // This stack will contain all the pages.
 const Stack = createNativeStackNavigator();
 
+const globalScreenOptions = {
+  headerStyle: { backgroundColor: '#4682B4', color: '#fff' },
+  headerTitleStyle: { color: 'white' },
+  headerTintColor: 'white', // any icons will be white.
+}
 
 export default function App() {
 
