@@ -1,8 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Platform, Button, Alert, TouchableOpacity } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+// import Register from './screens/Register';
+// import Customers from './screens/Customers';
+// import Login from './screens/Login';
+// import AddCustomer from './screens/AddCustomer';
+import Subscribe from './screens/Subscribe';
 import IAP from 'react-native-iap';
 import { validateReceipt } from './services/validateReceipt';
+
+// This stack will contain all the pages.
+const Stack = createNativeStackNavigator();
+
 
 export default function App() {
 
@@ -11,34 +22,68 @@ export default function App() {
     android: ['']
   });
 
-  const [products, setProducts] = useState({});
+  const [checking, setChecking] = useState(true);
+  const [subscriptionIsExpired, setSubscriptionIsExpired] = useState(true);
 
   useEffect(() => {
+    IAP.initConnection()
+      .then(() => {
+        console.log('@CodeTropolis Connected to store.');
+        IAP.getPurchaseHistory()
+          .then(async res => {
+            console.log(`@CodeTropolis ~ .then ~ res`, res);
+            const receipt = res[res.length - 1].transactionReceipt // The most recent receipt.
+            // const receipt = res[0].transactionReceipt
+            if (receipt) {
+              console.log(`@CodeTropolis ~ .then ~ receipt`, receipt);
+              const subscriptionStatus = await validateReceipt(receipt);
+              if (subscriptionStatus.isExpired) {
+                setSubscriptionIsExpired(true);
+                Alert.alert(
+                  "Expired",
+                  "Your subscription has expired. Please subscribe",
+                  [
+                    {
+                      text: "Ok",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel"
+                    },
+                  ]
+                );
+              } else {
+                setSubscriptionIsExpired(false);
+              }
+              setChecking(false);
+            }
+          })
+          .catch((error) => {
+            console.log(`@CodeTropolis ~ .then ~ error getting purchase history`, JSON.stringify(error));
+          })
 
-  }, [])
+      })
+      .catch(() => {
+        console.log('@CodeTropolis Error connecting to store.');
+      });
+  }, []);
 
-  if (products.length > 0) {
+
+  if (checking) {
     return (
       <View style={styles.container}>
-        {products.map((p, i) => {
-          return (
-            [
-              <TouchableOpacity key={i} onPress={() => purchaseItemAsync(p.productId)} style={styles.button} activeOpacity={.5}>
-                <Text style={styles.buttonText} >{p.description} | {p.price}</Text>
-              </TouchableOpacity>,
-              <View key='spacer' style={{ height: 30 }} />
-            ]
-          )
-        })}
-        {/* <Button title='Restore Purchases' onPress={() => restorePurchases()} /> */}
+        <Text>Checking for purchases...</Text>
       </View>
-    );
+    )
   } else {
     return (
-      <View style={styles.container}>
-        <Text>Loading products...</Text>
-        <StatusBar style="auto" />
-      </View>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName={subscriptionIsExpired ? 'Subscribe' : null} screenOptions={globalScreenOptions}>
+          {/* <Stack.Screen name='Register' component={Register} />
+          <Stack.Screen name='Login' component={Login} />
+          <Stack.Screen name='Customers' component={Customers} />
+          <Stack.Screen name='AddCustomer' component={AddCustomer} /> */}
+          <Stack.Screen name='Subscribe' component={Subscribe} />
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   }
 }
