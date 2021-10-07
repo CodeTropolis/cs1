@@ -31,8 +31,9 @@ const AddCustomer = ({ navigation }) => {
                 {/* Formik provides props */}
                 <Formik
                     initialValues={{ first_name: '', last_name: '', notes: '' }}
-                    onSubmit={(values) => {
-                        db.collection('users').doc(currentUserUid).collection('customers').add(values)
+                    onSubmit={(values, actions) => {
+                        db.collection('users').doc(currentUserUid).collection('customers').add(values);
+                        actions.resetForm();
                     }}>
 
                     {(props) => (
