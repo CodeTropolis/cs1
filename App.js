@@ -23,7 +23,7 @@ const globalScreenOptions = {
 export default function App() {
 
   const items = Platform.select({
-    ios: ['yearly_basic', 'monthly_basic'],
+    ios: ['basic_monthly'],
     android: ['']
   });
 
@@ -81,11 +81,11 @@ export default function App() {
   } else {
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={subscriptionIsExpired ? 'Subscribe' : null} screenOptions={globalScreenOptions}>
-          {/* <Stack.Screen name='Register' component={Register} />
+        <Stack.Navigator initialRouteName={subscriptionIsExpired ? 'Subscribe' : 'Customers'} screenOptions={globalScreenOptions}>
+          <Stack.Screen name='Register' component={Register} />
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='Customers' component={Customers} />
-          <Stack.Screen name='AddCustomer' component={AddCustomer} /> */}
+          <Stack.Screen name='AddCustomer' component={AddCustomer} />
           <Stack.Screen name='Subscribe' component={Subscribe} />
         </Stack.Navigator>
       </NavigationContainer>
