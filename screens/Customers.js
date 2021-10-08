@@ -32,7 +32,7 @@ const Customers = ({ navigation }) => {
         // Stop listening for updates when no longer required
         return () => {
             authSubscriber();
-            authSubscriber.snapshotSubscriber();
+            // authSubscriber.snapshotSubscriber();
         }
     }, [])
 

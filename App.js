@@ -61,6 +61,10 @@ export default function App() {
           })
           .catch((error) => {
             console.log(`@CodeTropolis ~ .then ~ error getting purchase history`, JSON.stringify(error));
+            // ToDo: This error occurs on new device. Is this the best way to handle?
+            // Might be new device if no results.
+            setSubscriptionIsExpired(true);
+            setChecking(false);
           })
 
       })

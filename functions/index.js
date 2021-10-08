@@ -9,7 +9,6 @@ exports.validateIOS = functions.https.onCall(async (d) => {
     const data = JSON.stringify({
         'receipt-data': d['receipt-data'], //receipt-data (sending from app in receiptBody object). attempting d.receipt-data will result in spaces at dash.
         'password': d['password'],
-        // password: '3ad7c85c5604476eb550974f1cd65fff',
         'exclude-old-transactions': true,
     })
     // ToDo: Change verifyReceipt endpoint for PROD.

@@ -27,15 +27,12 @@ const AddCustomer = ({ navigation }) => {
         <KeyboardAvoidingView>
             <StatusBar style="light" />
             <View>
-                {/* https://youtu.be/t4Q1s8WntlA?t=266 */}
-                {/* Formik provides props */}
                 <Formik
-                    initialValues={{ first_name: '', last_name: '', notes: '' }}
+                    initialValues={{ first_name: '', last_name: '', phone: '', notes: '' }}
                     onSubmit={(values, actions) => {
                         db.collection('users').doc(currentUserUid).collection('customers').add(values);
                         actions.resetForm();
                     }}>
-
                     {(props) => (
                         <View>
                             <TextInput
@@ -49,12 +46,18 @@ const AddCustomer = ({ navigation }) => {
                                 onChangeText={props.handleChange('last_name')}
                                 value={props.values.last_name} />
                             <TextInput
+                                style={styles.input}
+                                placeholder='Phone'
+                                onChangeText={props.handleChange('phone')}
+                                value={props.values.phone}
+                                keyboardType='numeric'
+                            />
+                            <TextInput
                                 multiline
                                 style={styles.input}
                                 placeholder='Notes...'
                                 onChangeText={props.handleChange('notes')}
                                 value={props.values.notes}
-                            // keyboardType='numeric'
                             />
                             <Button title='Submit' color='maroon' onPress={props.handleSubmit} />
                         </View>
@@ -80,11 +83,16 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     input: {
+        // flex: 1,
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        width: '90%',
         borderWidth: 1,
-        borderColor: '#ddd',
+        borderColor: 'lightsteelblue',
         padding: 10,
         fontSize: 18,
         borderRadius: 5,
-        marginTop: 7
+        marginTop: 7,
+        marginLeft: 7
     }
 })
