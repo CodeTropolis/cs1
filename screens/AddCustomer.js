@@ -1,8 +1,7 @@
 import React, { useLayoutEffect, useState, useEffect } from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, View, Button } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet, TextInput, View, Button } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
-import { Formik } from 'formik'
-import { TextInput } from 'react-native-gesture-handler'
+import { Formik } from 'formik';
 import { auth, db } from '../firebase'
 
 const AddCustomer = ({ navigation }) => {
@@ -37,7 +36,7 @@ const AddCustomer = ({ navigation }) => {
                         <View>
                             <TextInput
                                 style={styles.input}
-                                placeholder='First name'
+                                placeholder="First name"
                                 onChangeText={props.handleChange('first_name')}
                                 value={props.values.first_name} />
                             <TextInput
