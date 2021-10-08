@@ -36,9 +36,10 @@ const AddCustomer = ({ navigation }) => {
                         <View>
                             <TextInput
                                 style={styles.input}
-                                placeholder="First name"
                                 onChangeText={props.handleChange('first_name')}
-                                value={props.values.first_name} />
+                                value={props.values.first_name}
+                                placeholder="First name"
+                            />
                             <TextInput
                                 style={styles.input}
                                 placeholder='Last name'
