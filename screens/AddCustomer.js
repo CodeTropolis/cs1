@@ -2,12 +2,22 @@ import React, { useLayoutEffect, useState, useEffect } from 'react'
 import { KeyboardAvoidingView, StyleSheet, TextInput, View, Button } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Formik } from 'formik';
-import { auth, db } from '../firebase'
+import { auth, db } from '../firebase';
+import * as yup from 'yup';
+
+// Create validation rules.
+const formSchema = yup.object({
+    // Field must be a string and required.
+    first_name: yup.string().required().min(2),
+    last_name: yup.string().required().min(2),
+    email: yup.string().required(), // get email regex
+    phone: yup.number().required(), // use number()?
+})
 
 const AddCustomer = ({ navigation }) => {
 
     const [currentUserUid, setCurrentUserUid] = useState('');
-    const placeholderColor = 'gray'
+    const placeholderColor = 'gray';
 
     useEffect(() => {
         auth.onAuthStateChanged(user => {
@@ -26,9 +36,10 @@ const AddCustomer = ({ navigation }) => {
     return (
         <KeyboardAvoidingView>
             <StatusBar style="light" />
-            <View>
+            <View style={{ marginLeft: 'auto', marginRight: 'auto' }}>
                 <Formik
-                    initialValues={{ first_name: '', last_name: '', phone: '', notes: '' }}
+                    initialValues={{ first_name: '', last_name: '', email: '', phone: '', notes: '' }}
+                    validationSchema={formSchema}
                     onSubmit={(values, actions) => {
                         db.collection('users').doc(currentUserUid).collection('customers').add(values);
                         actions.resetForm();
@@ -48,6 +59,12 @@ const AddCustomer = ({ navigation }) => {
                                 placeholderTextColor={placeholderColor}
                                 onChangeText={props.handleChange('last_name')}
                                 value={props.values.last_name} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder='Email'
+                                placeholderTextColor={placeholderColor}
+                                onChangeText={props.handleChange('email')}
+                                value={props.values.email} />
                             <TextInput
                                 style={styles.input}
                                 placeholder='Phone'
@@ -78,7 +95,6 @@ export default AddCustomer
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
         justifyContent: 'center',
         padding: 10,
         backgroundColor: 'white',
@@ -88,13 +104,12 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     input: {
-        width: '90%',
         borderWidth: 1,
         borderColor: 'lightsteelblue',
         padding: 10,
         fontSize: 18,
         borderRadius: 5,
-        marginTop: 7,
-        marginLeft: 7
+        marginTop: 16,
+        minWidth: '90%'
     }
 })
