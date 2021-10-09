@@ -7,6 +7,7 @@ import { auth, db } from '../firebase'
 const AddCustomer = ({ navigation }) => {
 
     const [currentUserUid, setCurrentUserUid] = useState('');
+    const placeholderColor = 'gray'
 
     useEffect(() => {
         auth.onAuthStateChanged(user => {
@@ -39,15 +40,18 @@ const AddCustomer = ({ navigation }) => {
                                 onChangeText={props.handleChange('first_name')}
                                 value={props.values.first_name}
                                 placeholder="First name"
+                                placeholderTextColor={placeholderColor}
                             />
                             <TextInput
                                 style={styles.input}
                                 placeholder='Last name'
+                                placeholderTextColor={placeholderColor}
                                 onChangeText={props.handleChange('last_name')}
                                 value={props.values.last_name} />
                             <TextInput
                                 style={styles.input}
                                 placeholder='Phone'
+                                placeholderTextColor={placeholderColor}
                                 onChangeText={props.handleChange('phone')}
                                 value={props.values.phone}
                                 keyboardType='numeric'
@@ -56,6 +60,7 @@ const AddCustomer = ({ navigation }) => {
                                 multiline
                                 style={styles.input}
                                 placeholder='Notes...'
+                                placeholderTextColor={placeholderColor}
                                 onChangeText={props.handleChange('notes')}
                                 value={props.values.notes}
                             />
@@ -83,9 +88,6 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     input: {
-        // flex: 1,
-        // justifyContent: 'center',
-        // alignItems: 'center',
         width: '90%',
         borderWidth: 1,
         borderColor: 'lightsteelblue',
