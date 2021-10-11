@@ -27,7 +27,7 @@ export default function App() {
     android: ['']
   });
 
-  const [checking, setChecking] = useState(true);
+  const [checking, setChecking] = useState(false); // ToDo: Change when Checking for products and retrieving products are working.
   const [subscriptionIsExpired, setSubscriptionIsExpired] = useState(true);
 
   useEffect(() => {

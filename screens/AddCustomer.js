@@ -57,7 +57,8 @@ const AddCustomer = ({ navigation }) => {
                                 placeholderTextColor={placeholderColor}
                             />
                             {/* Yup attaches errors object to props */}
-                            <Text style={styles.error}>{props.errors.first_name}</Text>
+                            {props.errors.first_name ? <Text style={styles.error}>{props.errors.first_name}</Text> : null}
+
                             <TextInput
                                 style={styles.input}
                                 placeholder='Last name'
