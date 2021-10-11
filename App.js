@@ -31,46 +31,46 @@ export default function App() {
   const [subscriptionIsExpired, setSubscriptionIsExpired] = useState(true);
 
   useEffect(() => {
-    IAP.initConnection()
-      .then(() => {
-        console.log('@CodeTropolis Connected to store.');
-        IAP.getPurchaseHistory()
-          .then(async res => {
-            const receipt = res[res.length - 1].transactionReceipt // The most recent receipt.
-            // const receipt = res[0].transactionReceipt
-            if (receipt) {
-              const subscriptionStatus = await validateReceipt(receipt);
-              if (subscriptionStatus.isExpired) {
-                setSubscriptionIsExpired(true);
-                Alert.alert(
-                  "Expired",
-                  "Your subscription has expired. Please subscribe",
-                  [
-                    {
-                      text: "Ok",
-                      onPress: () => console.log("Cancel Pressed"),
-                      style: "cancel"
-                    },
-                  ]
-                );
-              } else {
-                setSubscriptionIsExpired(false);
-              }
-              setChecking(false);
-            }
-          })
-          .catch((error) => {
-            console.log(`@CodeTropolis ~ .then ~ error getting purchase history`, JSON.stringify(error));
-            // ToDo: This error occurs on new device. Is this the best way to handle?
-            // Might be new device if no results.
-            setSubscriptionIsExpired(true);
-            setChecking(false);
-          })
+    // IAP.initConnection()
+    //   .then(() => {
+    //     console.log('@CodeTropolis Connected to store.');
+    //     IAP.getPurchaseHistory()
+    //       .then(async res => {
+    //         const receipt = res[res.length - 1].transactionReceipt // The most recent receipt.
+    //         // const receipt = res[0].transactionReceipt
+    //         if (receipt) {
+    //           const subscriptionStatus = await validateReceipt(receipt);
+    //           if (subscriptionStatus.isExpired) {
+    //             setSubscriptionIsExpired(true);
+    //             Alert.alert(
+    //               "Expired",
+    //               "Your subscription has expired. Please subscribe",
+    //               [
+    //                 {
+    //                   text: "Ok",
+    //                   onPress: () => console.log("Cancel Pressed"),
+    //                   style: "cancel"
+    //                 },
+    //               ]
+    //             );
+    //           } else {
+    //             setSubscriptionIsExpired(false);
+    //           }
+    //           setChecking(false);
+    //         }
+    //       })
+    //       .catch((error) => {
+    //         console.log(`@CodeTropolis ~ .then ~ error getting purchase history`, JSON.stringify(error));
+    //         // ToDo: This error occurs on new device. Is this the best way to handle?
+    //         // Might be new device if no results.
+    //         setSubscriptionIsExpired(true);
+    //         setChecking(false);
+    //       })
 
-      })
-      .catch(() => {
-        console.log('@CodeTropolis Error connecting to store.');
-      });
+    //   })
+    //   .catch(() => {
+    //     console.log('@CodeTropolis Error connecting to store.');
+    //   });
   }, []);
 
 
@@ -83,7 +83,8 @@ export default function App() {
   } else {
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={subscriptionIsExpired ? 'Subscribe' : 'Customers'} screenOptions={globalScreenOptions}>
+        {/* <Stack.Navigator initialRouteName={subscriptionIsExpired ? 'Subscribe' : 'Customers'} screenOptions={globalScreenOptions}> */}
+        <Stack.Navigator initialRouteName={'Customers'} screenOptions={globalScreenOptions}>
           <Stack.Screen name='Register' component={Register} />
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='Customers' component={Customers} />

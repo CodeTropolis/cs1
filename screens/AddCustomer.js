@@ -9,11 +9,11 @@ import * as yup from 'yup';
 const formSchema = yup.object({
     // Field must be a string and required.
     first_name: yup.string()
-        .required()
+        .required('First name is required and must contain at least 2 characters')
         .min(2)
         .typeError('First name is required and must contain at least 2 characters'),
     last_name: yup.string().required().min(2),
-    email: yup.string().email('Email format invalid.').required(), // get email regex
+    email: yup.string().email('Email format invalid.').required(), // get email regex?
     phone: yup.number().required(), // use number()?
 })
 
