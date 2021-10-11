@@ -3,7 +3,7 @@
     "name": "cs1",
     "slug": "cs1",
     "version": "1.0.0",
-    "orientation": "landscape",
+    "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -19,7 +19,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.prodev.rniap",
-      "requireFullScreen": true
+      "requireFullScreen": false
     },
     "android": {
       "adaptiveIcon": {
