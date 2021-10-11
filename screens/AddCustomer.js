@@ -57,6 +57,7 @@ const AddCustomer = ({ navigation }) => {
                                 value={props.values.first_name}
                                 placeholder="First name"
                                 placeholderTextColor={placeholderColor}
+                                onBlur={props.handleBlur('first_name')}
                             />
                             {/* Yup attaches errors object to props */}
                             {props.touched.first_name && props.errors.first_name ? <Text style={styles.error}>{props.errors.first_name}</Text> : null}
@@ -66,14 +67,18 @@ const AddCustomer = ({ navigation }) => {
                                 placeholder='Last name'
                                 placeholderTextColor={placeholderColor}
                                 onChangeText={props.handleChange('last_name')}
-                                value={props.values.last_name} />
+                                value={props.values.last_name}
+                                onBlur={props.handleBlur('last_name')}
+                            />
                             {props.touched.last_name && props.errors.last_name ? <Text style={styles.error}>{props.errors.last_name}</Text> : null}
                             <TextInput
                                 style={styles.input}
                                 placeholder='Email'
                                 placeholderTextColor={placeholderColor}
                                 onChangeText={props.handleChange('email')}
-                                value={props.values.email} />
+                                value={props.values.email}
+                                onBlur={props.handleBlur('email')}
+                            />
                             {props.touched.email && props.errors.email ? <Text style={styles.error}>{props.errors.email}</Text> : null}
                             <TextInput
                                 style={styles.input}
@@ -82,6 +87,7 @@ const AddCustomer = ({ navigation }) => {
                                 onChangeText={props.handleChange('phone')}
                                 value={props.values.phone}
                                 keyboardType='numeric'
+                                onBlur={props.handleBlur('phone')}
                             />
                             {props.touched.phone && props.errors.phone ? <Text style={styles.error}>{props.errors.phone}</Text> : null}
                             <TextInput
