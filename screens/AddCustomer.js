@@ -9,12 +9,13 @@ import * as yup from 'yup';
 const formSchema = yup.object({
     // Field must be a string and required.
     first_name: yup.string()
-        .required('First name is required and must contain at least 2 characters')
-        .min(2)
-        .typeError('First name is required and must contain at least 2 characters'),
-    last_name: yup.string().required().min(2),
-    email: yup.string().email('Email format invalid.').required(), // get email regex?
-    phone: yup.number().required(), // use number()?
+        .required('First name is required')
+        .min(2, 'At least two characters required.'),
+    last_name: yup.string()
+        .required('Last name is required')
+        .min(2, 'At least two characters required.'),
+    email: yup.string().email('Email format invalid.').required('Email is required.'),
+    phone: yup.string().required('Phone is required.'),
 })
 
 const AddCustomer = ({ navigation }) => {
@@ -24,8 +25,9 @@ const AddCustomer = ({ navigation }) => {
 
     useEffect(() => {
         auth.onAuthStateChanged(user => {
-            db.collection('users');
-            setCurrentUserUid(user.uid);
+            if (user) {
+                setCurrentUserUid(user.uid);
+            }
         })
     }, [])
 
@@ -57,7 +59,7 @@ const AddCustomer = ({ navigation }) => {
                                 placeholderTextColor={placeholderColor}
                             />
                             {/* Yup attaches errors object to props */}
-                            {props.errors.first_name ? <Text style={styles.error}>{props.errors.first_name}</Text> : null}
+                            {props.touched.first_name && props.errors.first_name ? <Text style={styles.error}>{props.errors.first_name}</Text> : null}
 
                             <TextInput
                                 style={styles.input}
@@ -65,12 +67,14 @@ const AddCustomer = ({ navigation }) => {
                                 placeholderTextColor={placeholderColor}
                                 onChangeText={props.handleChange('last_name')}
                                 value={props.values.last_name} />
+                            {props.touched.last_name && props.errors.last_name ? <Text style={styles.error}>{props.errors.last_name}</Text> : null}
                             <TextInput
                                 style={styles.input}
                                 placeholder='Email'
                                 placeholderTextColor={placeholderColor}
                                 onChangeText={props.handleChange('email')}
                                 value={props.values.email} />
+                            {props.errors.email ? <Text style={styles.error}>{props.errors.email}</Text> : null}
                             <TextInput
                                 style={styles.input}
                                 placeholder='Phone'
