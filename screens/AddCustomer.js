@@ -74,7 +74,7 @@ const AddCustomer = ({ navigation }) => {
                                 placeholderTextColor={placeholderColor}
                                 onChangeText={props.handleChange('email')}
                                 value={props.values.email} />
-                            {props.errors.email ? <Text style={styles.error}>{props.errors.email}</Text> : null}
+                            {props.touched.email && props.errors.email ? <Text style={styles.error}>{props.errors.email}</Text> : null}
                             <TextInput
                                 style={styles.input}
                                 placeholder='Phone'
@@ -83,6 +83,7 @@ const AddCustomer = ({ navigation }) => {
                                 value={props.values.phone}
                                 keyboardType='numeric'
                             />
+                            {props.touched.phone && props.errors.phone ? <Text style={styles.error}>{props.errors.phone}</Text> : null}
                             <TextInput
                                 multiline
                                 style={styles.input}
