@@ -70,7 +70,7 @@ const Subscribe = ({ navigation }) => {
                 if (receipt) {
                     const subscriptionStatus = await validateReceipt(receipt);
                     if (!subscriptionStatus.isExpired) {
-                        IAP.finishTransaction(_purchase).then(finishTransactionStat => console.log('restore purchases - finishTransactionStat: ', finishTransactionStat))
+                        // IAP.finishTransaction(_purchase).then(finishTransactionStat => console.log('restore purchases - finishTransactionStat: ', finishTransactionStat))
                         navigation.replace('Customers');
                     } else {
                         Alert.alert("Subscription expired. Please subscribe.");
