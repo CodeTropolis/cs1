@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Platform, Button, Alert, TouchableOpacity } from 'react-native';
-import IAP, { finishTransaction } from 'react-native-iap';
+import IAP from 'react-native-iap';
 import { validateReceipt } from '../services/validateReceipt';
 
 const Subscribe = ({ navigation }) => {
@@ -40,7 +40,7 @@ const Subscribe = ({ navigation }) => {
                         IAP.finishTransaction(purchase);
                         navigation.replace('Customers');
                     }
-                    setIsPurchasing(false);
+                    // setIsPurchasing(false); //!Can't perform a React state update on an unmounted component
                 }
             } catch (error) {
                 console.log(`@CodeTropolis ~ useEffect ~ purchaseUpdatedListener error`, error);

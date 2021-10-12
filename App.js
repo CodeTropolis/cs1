@@ -43,6 +43,7 @@ export default function App() {
                   [
                     {
                       text: "Ok",
+                      // https://stackoverflow.com/a/61355164
                       onPress: () => RootNavigation.navigate('Subscribe ', null),
                       style: "cancel"
                     },
