@@ -1,13 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Platform, Button, Alert, TouchableOpacity } from 'react-native';
-import IAP from 'react-native-iap';
+import IAP, { finishTransaction } from 'react-native-iap';
 import { validateReceipt } from '../services/validateReceipt';
 
 const Subscribe = ({ navigation }) => {
 
     const items = Platform.select({
-        ios: ['cs1_yearly_basic'],
+        ios: ['cs1_monthly_basic', 'cs1_yearly_basic'],
         android: ['']
     });
 
@@ -35,7 +35,10 @@ const Subscribe = ({ navigation }) => {
                 //https://youtu.be/4JLHRV2kiCU?list=PLekF6r71R4TEaq__BaXfvmBcHvnWPahY-&t=3409f
                 if (receipt) {
                     const subscriptionStatus = await validateReceipt(receipt);
-                    !subscriptionStatus.isExpired ? navigation.replace('Customers') : null;
+                    if (!subscriptionStatus.isExpired) {
+                        IAP.finishTransaction(purchase).then(finishTransactionStat => console.log('finishTransactionStat: ', finishTransactionStat))
+                        navigation.replace('Customers');
+                    }
                 }
             } catch (error) {
                 console.log(`@CodeTropolis ~ useEffect ~ purchaseUpdatedListener error`, error);
@@ -62,10 +65,16 @@ const Subscribe = ({ navigation }) => {
             console.info('Available purchases :: ', JSON.stringify(purchases));
             if (purchases && purchases.length > 0) {
                 console.log(`@CodeTropolis ~ restorePurchases ~ purchases.length`, purchases.length);
-                const receipt = purchases[0].transactionReceipt;
+                const purchase = purchases[0];
+                const receipt = purchase.transactionReceipt;
                 if (receipt) {
                     const subscriptionStatus = await validateReceipt(receipt);
-                    !subscriptionStatus.isExpired ? navigation.replace('Customers') : null;
+                    if (!subscriptionStatus.isExpired) {
+                        IAP.finishTransaction(_purchase).then(finishTransactionStat => console.log('restore purchases - finishTransactionStat: ', finishTransactionStat))
+                        navigation.replace('Customers');
+                    } else {
+                        Alert.alert("Subscription expired. Please subscribe.");
+                    }
                 }
             }
         } catch (err) {

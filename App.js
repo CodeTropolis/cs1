@@ -24,7 +24,6 @@ export default function App() {
 
   const [checking, setChecking] = useState(true); // ToDo: Change when Checking for products and retrieving products are working.
   const [subscriptionIsExpired, setSubscriptionIsExpired] = useState(true);
-  const [hasPurchaseHistory, setHasPurchaseHistory] = useState(true);
 
   useEffect(() => {
     IAP.initConnection()
@@ -57,13 +56,8 @@ export default function App() {
               setChecking(false);
 
             }
-            // else {
-            //   setHasPurchaseHistory(false);
-            //   setChecking(false);
-            // }
           })
           .catch((error) => {
-            // !Also get this when subscription is active. But subscriptionStatus is undefined. Had wrong SharedSecret
             console.log(`@CodeTropolis ~ .then ~ error getting purchase history`, JSON.stringify(error));
             // ToDo: This error occurs on new device. Is this the best way to handle?
             // Might be new device if no results.
@@ -87,7 +81,7 @@ export default function App() {
   } else {
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={subscriptionIsExpired || !hasPurchaseHistory ? 'Subscribe' : 'Customers'} screenOptions={globalScreenOptions}>
+        <Stack.Navigator initialRouteName={subscriptionIsExpired ? 'Subscribe' : 'Customers'} screenOptions={globalScreenOptions}>
           {/* <Stack.Navigator initialRouteName={'Customers'} screenOptions={globalScreenOptions}> */}
           <Stack.Screen name='Register' component={Register} />
           <Stack.Screen name='Login' component={Login} />
