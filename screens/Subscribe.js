@@ -54,7 +54,6 @@ const Subscribe = ({ navigation }) => {
     // restorePurchases()
     // Use IAP.getAvailablePurchases() to get a receipt and send to the validate() method.
     // From https://github.com/dooboolab/react-native-iap/blob/master/IapExample/App.js
-    // ToDO: Test Restore Purchases
     // ToDo: Upgrades and downgrades?
     const restorePurchases = async () => {
         try {
@@ -62,9 +61,7 @@ const Subscribe = ({ navigation }) => {
                 'Get available purchases (non-consumable or unconsumed consumable)',
             );
             const purchases = await IAP.getAvailablePurchases();
-            console.info('Available purchases :: ', JSON.stringify(purchases));
             if (purchases && purchases.length > 0) {
-                console.log(`@CodeTropolis ~ restorePurchases ~ purchases.length`, purchases.length);
                 const purchase = purchases[0];
                 const receipt = purchase.transactionReceipt;
                 if (receipt) {

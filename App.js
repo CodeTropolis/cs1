@@ -10,6 +10,7 @@ import AddCustomer from './screens/AddCustomer';
 import Subscribe from './screens/Subscribe';
 import IAP from 'react-native-iap';
 import { validateReceipt } from './services/validateReceipt';
+import * as RootNavigation from './services/rootNavigation';
 
 // This stack will contain all the pages.
 const Stack = createNativeStackNavigator();
@@ -22,7 +23,7 @@ const globalScreenOptions = {
 
 export default function App() {
 
-  const [checking, setChecking] = useState(true); // ToDo: Change when Checking for products and retrieving products are working.
+  const [checking, setChecking] = useState(true);
   const [subscriptionIsExpired, setSubscriptionIsExpired] = useState(true);
 
   useEffect(() => {
@@ -33,19 +34,16 @@ export default function App() {
           .then(async res => {
             if (res) {
               const receipt = res[res.length - 1].transactionReceipt // The most recent receipt.
-              // const receipt = res[0].transactionReceipt
-              // console.log(`@CodeTropolis ~ .then ~ receipt`, receipt);
               const subscriptionStatus = await validateReceipt(receipt);
-              console.log(`@CodeTropolis ~ .then ~ subscriptionStatus`, subscriptionStatus);
               if (subscriptionStatus.isExpired) {
                 setSubscriptionIsExpired(true);
                 Alert.alert(
-                  "Expired",
-                  "Your subscription has expired. Please subscribe",
+                  "Please Subscribe",
+                  "Your subscription has expired.",
                   [
                     {
                       text: "Ok",
-                      onPress: () => console.log("Cancel Pressed"),
+                      onPress: () => RootNavigation.navigate('Subscribe ', null),
                       style: "cancel"
                     },
                   ]
@@ -82,7 +80,6 @@ export default function App() {
     return (
       <NavigationContainer>
         <Stack.Navigator initialRouteName={subscriptionIsExpired ? 'Subscribe' : 'Customers'} screenOptions={globalScreenOptions}>
-          {/* <Stack.Navigator initialRouteName={'Customers'} screenOptions={globalScreenOptions}> */}
           <Stack.Screen name='Register' component={Register} />
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='Customers' component={Customers} />
