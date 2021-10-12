@@ -12,6 +12,7 @@ const Subscribe = ({ navigation }) => {
     });
 
     const [products, setProducts] = useState({});
+    const [isPurchasing, setIsPurchasing] = useState(false);
 
     useEffect(() => {
         IAP.getSubscriptions(items)
@@ -39,6 +40,7 @@ const Subscribe = ({ navigation }) => {
                         IAP.finishTransaction(purchase);
                         navigation.replace('Customers');
                     }
+                    setIsPurchasing(false);
                 }
             } catch (error) {
                 console.log(`@CodeTropolis ~ useEffect ~ purchaseUpdatedListener error`, error);
@@ -79,13 +81,27 @@ const Subscribe = ({ navigation }) => {
         }
     }
 
+    const makePurchase = async (productId) => {
+        setIsPurchasing(true);
+        IAP.requestSubscription(productId);
+    }
+
+    if (isPurchasing) {
+        return (
+            <View style={styles.container}>
+                <Text>Making Purchase...</Text>
+                <StatusBar style="auto" />
+            </View>
+        );
+    }
+
     if (products.length > 0) {
         return (
             <View style={styles.container}>
                 {products.map((p, i) => {
                     return (
                         [
-                            <TouchableOpacity key={i} onPress={() => IAP.requestSubscription(p.productId)} style={styles.button} activeOpacity={.5}>
+                            <TouchableOpacity key={i} onPress={() => makePurchase(p.productId)} style={styles.button} activeOpacity={.5}>
                                 <Text style={styles.buttonText} >{p.description} | {p.localizedPrice} </Text>
                             </TouchableOpacity>,
                             <View key='spacer' style={{ height: 30 }} />
