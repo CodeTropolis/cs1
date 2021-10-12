@@ -22,13 +22,9 @@ const globalScreenOptions = {
 
 export default function App() {
 
-  const items = Platform.select({
-    ios: ['basic_monthly'],
-    android: ['']
-  });
-
-  const [checking, setChecking] = useState(false); // ToDo: Change when Checking for products and retrieving products are working.
+  const [checking, setChecking] = useState(true); // ToDo: Change when Checking for products and retrieving products are working.
   const [subscriptionIsExpired, setSubscriptionIsExpired] = useState(true);
+  const [hasPurchaseHistory, setHasPurchaseHistory] = useState(true);
 
   useEffect(() => {
     IAP.initConnection()
@@ -36,26 +32,31 @@ export default function App() {
         console.log('@CodeTropolis Connected to store.');
         IAP.getPurchaseHistory()
           .then(async res => {
-            const receipt = res[res.length - 1].transactionReceipt // The most recent receipt.
-            // const receipt = res[0].transactionReceipt
-            if (receipt) {
-              const subscriptionStatus = await validateReceipt(receipt);
-              if (subscriptionStatus.isExpired) {
-                setSubscriptionIsExpired(true);
-                Alert.alert(
-                  "Expired",
-                  "Your subscription has expired. Please subscribe",
-                  [
-                    {
-                      text: "Ok",
-                      onPress: () => console.log("Cancel Pressed"),
-                      style: "cancel"
-                    },
-                  ]
-                );
-              } else {
-                setSubscriptionIsExpired(false);
+            if (res) {
+              const receipt = res[res.length - 1].transactionReceipt // The most recent receipt.
+              // const receipt = res[0].transactionReceipt
+              if (receipt) {
+                const subscriptionStatus = await validateReceipt(receipt);
+                if (subscriptionStatus.isExpired) {
+                  setSubscriptionIsExpired(true);
+                  Alert.alert(
+                    "Expired",
+                    "Your subscription has expired. Please subscribe",
+                    [
+                      {
+                        text: "Ok",
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel"
+                      },
+                    ]
+                  );
+                } else {
+                  setSubscriptionIsExpired(false);
+                }
+                setChecking(false);
               }
+            } else {
+              setHasPurchaseHistory(false);
               setChecking(false);
             }
           })
@@ -83,7 +84,7 @@ export default function App() {
   } else {
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={subscriptionIsExpired ? 'Subscribe' : 'Customers'} screenOptions={globalScreenOptions}>
+        <Stack.Navigator initialRouteName={subscriptionIsExpired || !hasPurchaseHistory ? 'Subscribe' : 'Customers'} screenOptions={globalScreenOptions}>
           {/* <Stack.Navigator initialRouteName={'Customers'} screenOptions={globalScreenOptions}> */}
           <Stack.Screen name='Register' component={Register} />
           <Stack.Screen name='Login' component={Login} />

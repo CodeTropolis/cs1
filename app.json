@@ -18,7 +18,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.prodev.rniap",
+      "bundleIdentifier": "com.prodevllc.customerone",
       "requireFullScreen": false
     },
     "android": {
