@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar'
 import { Formik } from 'formik';
 import { auth, db } from '../firebase';
 import * as yup from 'yup';
+import { Camera } from 'expo-camera';
 
 // Create validation rules.
 const formSchema = yup.object({
