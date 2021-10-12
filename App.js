@@ -38,8 +38,8 @@ export default function App() {
               if (subscriptionStatus.isExpired) {
                 setSubscriptionIsExpired(true);
                 Alert.alert(
-                  "Please Subscribe",
-                  "Your subscription has expired.",
+                  "Subscription Expired",
+                  "Please subscribe.",
                   [
                     {
                       text: "Ok",
