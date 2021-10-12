@@ -28,39 +28,42 @@ export default function App() {
 
   useEffect(() => {
     IAP.initConnection()
-      .then(() => {
+      .then(async () => {
         console.log('@CodeTropolis Connected to store.');
-        IAP.getPurchaseHistory()
+        await IAP.getPurchaseHistory()
           .then(async res => {
             if (res) {
               const receipt = res[res.length - 1].transactionReceipt // The most recent receipt.
               // const receipt = res[0].transactionReceipt
-              if (receipt) {
-                const subscriptionStatus = await validateReceipt(receipt);
-                if (subscriptionStatus.isExpired) {
-                  setSubscriptionIsExpired(true);
-                  Alert.alert(
-                    "Expired",
-                    "Your subscription has expired. Please subscribe",
-                    [
-                      {
-                        text: "Ok",
-                        onPress: () => console.log("Cancel Pressed"),
-                        style: "cancel"
-                      },
-                    ]
-                  );
-                } else {
-                  setSubscriptionIsExpired(false);
-                }
-                setChecking(false);
+              // console.log(`@CodeTropolis ~ .then ~ receipt`, receipt);
+              const subscriptionStatus = await validateReceipt(receipt);
+              console.log(`@CodeTropolis ~ .then ~ subscriptionStatus`, subscriptionStatus);
+              if (subscriptionStatus.isExpired) {
+                setSubscriptionIsExpired(true);
+                Alert.alert(
+                  "Expired",
+                  "Your subscription has expired. Please subscribe",
+                  [
+                    {
+                      text: "Ok",
+                      onPress: () => console.log("Cancel Pressed"),
+                      style: "cancel"
+                    },
+                  ]
+                );
+              } else {
+                setSubscriptionIsExpired(false);
               }
-            } else {
-              setHasPurchaseHistory(false);
               setChecking(false);
+
             }
+            // else {
+            //   setHasPurchaseHistory(false);
+            //   setChecking(false);
+            // }
           })
           .catch((error) => {
+            // !Also get this when subscription is active. But subscriptionStatus is undefined. Had wrong SharedSecret
             console.log(`@CodeTropolis ~ .then ~ error getting purchase history`, JSON.stringify(error));
             // ToDo: This error occurs on new device. Is this the best way to handle?
             // Might be new device if no results.

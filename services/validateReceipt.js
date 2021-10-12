@@ -2,7 +2,7 @@ export const validateReceipt = (receipt) => {
 
     const receiptBody = {
         'receipt-data': receipt,
-        'password': 'b41f9b98a1fc4bcfa5a6d23bddfcc6e5'
+        'password': '7f9564cd11484342b4663a422be294af'
     }
 
     // Backend validation:
