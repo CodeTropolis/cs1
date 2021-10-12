@@ -7,7 +7,7 @@ import { validateReceipt } from '../services/validateReceipt';
 const Subscribe = ({ navigation }) => {
 
     const items = Platform.select({
-        ios: ['cs1_monthly_basic', 'cs1_yearly_basic'],
+        ios: ['cs1_monthly_basic', 'ycs1_yearly_basic'],
         android: ['']
     });
 
@@ -36,7 +36,7 @@ const Subscribe = ({ navigation }) => {
                 if (receipt) {
                     const subscriptionStatus = await validateReceipt(receipt);
                     if (!subscriptionStatus.isExpired) {
-                        IAP.finishTransaction(purchase).then(finishTransactionStat => console.log('finishTransactionStat: ', finishTransactionStat))
+                        IAP.finishTransaction(purchase);
                         navigation.replace('Customers');
                     }
                 }
@@ -70,7 +70,6 @@ const Subscribe = ({ navigation }) => {
                 if (receipt) {
                     const subscriptionStatus = await validateReceipt(receipt);
                     if (!subscriptionStatus.isExpired) {
-                        // IAP.finishTransaction(_purchase).then(finishTransactionStat => console.log('restore purchases - finishTransactionStat: ', finishTransactionStat))
                         navigation.replace('Customers');
                     } else {
                         Alert.alert("Subscription expired. Please subscribe.");
