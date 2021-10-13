@@ -5,7 +5,7 @@ import { Camera } from 'expo-camera';
 import CameraPreview from '../components/CameraPreview'
 let camera
 
-const TakePhoto = () => {
+const CustomerIdent = () => {
 
     const [startCamera, setStartCamera] = useState(false)
     const [previewVisible, setPreviewVisible] = useState(false)
@@ -203,7 +203,7 @@ const TakePhoto = () => {
     )
 }
 
-export default TakePhoto
+export default CustomerIdent
 
 const styles = StyleSheet.create({
     container: {

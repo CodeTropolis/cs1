@@ -4,7 +4,6 @@ import { StatusBar } from 'expo-status-bar'
 import { Formik } from 'formik';
 import { auth, db } from '../firebase';
 import * as yup from 'yup';
-import { Camera } from 'expo-camera';
 
 // Create validation rules.
 const formSchema = yup.object({
@@ -44,7 +43,7 @@ const AddCustomer = ({ navigation }) => {
     return (
         <KeyboardAvoidingView>
 
-            <Button title='Photo' color='maroon' onPress={() => navigation.navigate('TakePhoto')} />
+            <Button title='Photo' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
 
 
             <StatusBar style="light" />
