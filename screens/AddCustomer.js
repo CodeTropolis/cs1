@@ -23,6 +23,8 @@ const AddCustomer = ({ navigation }) => {
 
     const [currentUserUid, setCurrentUserUid] = useState('');
     const placeholderColor = 'gray';
+    const [hasPermission, setHasPermission] = useState(null);
+    const [type, setType] = useState(Camera.Constants.Type.back);
 
     useEffect(() => {
         auth.onAuthStateChanged(user => {
@@ -31,7 +33,6 @@ const AddCustomer = ({ navigation }) => {
             }
         })
     }, [])
-
 
     useLayoutEffect(() => {
         navigation.setOptions({
