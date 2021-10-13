@@ -8,6 +8,7 @@ import Customers from './screens/Customers';
 import Login from './screens/Login';
 import AddCustomer from './screens/AddCustomer';
 import Subscribe from './screens/Subscribe';
+import TakePhoto from './screens/TakePhoto';
 import IAP from 'react-native-iap';
 import { validateReceipt } from './services/validateReceipt';
 import * as RootNavigation from './services/rootNavigation';
@@ -86,6 +87,7 @@ export default function App() {
           <Stack.Screen name='Customers' component={Customers} />
           <Stack.Screen name='AddCustomer' component={AddCustomer} />
           <Stack.Screen name='Subscribe' component={Subscribe} />
+          <Stack.Screen name='TakePhoto' component={TakePhoto} />
         </Stack.Navigator>
       </NavigationContainer>
     );

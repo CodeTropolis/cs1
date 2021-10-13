@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState, useEffect } from 'react'
-import { KeyboardAvoidingView, StyleSheet, TextInput, View, Button, Text } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet, TextInput, View, Button, Text, TouchableOpacity } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Formik } from 'formik';
 import { auth, db } from '../firebase';
@@ -23,25 +23,30 @@ const AddCustomer = ({ navigation }) => {
 
     const [currentUserUid, setCurrentUserUid] = useState('');
     const placeholderColor = 'gray';
-    const [hasPermission, setHasPermission] = useState(null);
-    const [type, setType] = useState(Camera.Constants.Type.back);
+
 
     useEffect(() => {
         auth.onAuthStateChanged(user => {
             if (user) {
                 setCurrentUserUid(user.uid);
             }
-        })
+        });
     }, [])
 
     useLayoutEffect(() => {
         navigation.setOptions({
             headerBackTitle: "Customers",
         });
-    }, [navigation])
+    }, [navigation]);
+
+
 
     return (
         <KeyboardAvoidingView>
+
+            <Button title='Photo' color='maroon' onPress={() => navigation.navigate('TakePhoto')} />
+
+
             <StatusBar style="light" />
             <View style={{ marginLeft: 'auto', marginRight: 'auto' }}>
                 <Formik
