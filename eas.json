@@ -1,6 +1,11 @@
 {
   "build": {
     "release": {},
+    "preview": {
+      "ios": {
+        "simulator": true
+      }
+    },
     "development": {
       "developmentClient": true,
       "distribution": "internal"
