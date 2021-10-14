@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react
 
 
 const CameraPreview = ({ photo, retakePicture, savePhoto }) => {
-    console.log('sdsfds', photo)
     return (
         <View
             style={{

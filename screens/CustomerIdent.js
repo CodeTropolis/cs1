@@ -4,32 +4,25 @@ import { StatusBar } from 'expo-status-bar'
 import { Camera } from 'expo-camera';
 import CameraPreview from '../components/CameraPreview'
 import { db } from '../firebase'
+// import TakePhoto from '../components/CameraTakePhoto'
 let camera
 
 const CustomerIdent = () => {
 
-    const [startCamera, setStartCamera] = useState(true)
     const [previewVisible, setPreviewVisible] = useState(false)
     const [capturedImage, setCapturedImage] = useState(null)
     const [cameraType, setCameraType] = useState(Camera.Constants.Type.back)
     const [flashMode, setFlashMode] = useState('off')
 
-
-
-    // const __startCamera = async () => {
-    //     const { status } = await Camera.requestPermissionsAsync()
-    //     if (status === 'granted') {
-    //         // start the camera
-    //         setStartCamera(true)
-    //     } else {
-    //         Alert.alert('Access denied')
-    //     }
-    // }
-
+    const __startCamera = async () => {
+        const { status } = await Camera.requestPermissionsAsync()
+        if (status !== 'granted') {
+            Alert.alert('Access denied')
+        }
+    }
     const __takePicture = async () => {
         if (!camera) return
         const photo = await camera.takePictureAsync({ base64: true })
-        // console.log(`@CodeTropolis ~ const__takePicture= ~ photo`, photo);
         setPreviewVisible(true)
         setCapturedImage(photo)
     }
@@ -72,6 +65,7 @@ const CustomerIdent = () => {
                 {previewVisible && capturedImage ? (
                     <CameraPreview photo={capturedImage} savePhoto={__savePhoto} retakePicture={__retakePicture} />
                 ) : (
+                    // <TakePhoto cameraType={cameraType} flashMode={flashMode} switchCamera={__switchCamera} takePhoto={__takePicture} />
                     <Camera
                         type={cameraType}
                         flashMode={flashMode}
