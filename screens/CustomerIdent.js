@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground } from
 import { StatusBar } from 'expo-status-bar'
 import { Camera } from 'expo-camera';
 import CameraPreview from '../components/CameraPreview'
+import { db } from '../firebase'
 let camera
 
 const CustomerIdent = () => {
@@ -27,13 +28,15 @@ const CustomerIdent = () => {
 
     const __takePicture = async () => {
         if (!camera) return
-        const photo = await camera.takePictureAsync()
-        console.log(photo)
+        const photo = await camera.takePictureAsync({ base64: true })
+        // console.log(`@CodeTropolis ~ const__takePicture= ~ photo`, photo);
         setPreviewVisible(true)
         setCapturedImage(photo)
     }
     const __savePhoto = () => {
-        console.log(`@CodeTropolis ~ TakePhoto ~ __savePhoto capturedImage`, capturedImage);
+        console.log(`@CodeTropolis ~ __savePhoto capturedImage`, capturedImage);
+        // const uri = capturedImage.uri;
+        // db.storage().ref()
         setPreviewVisible(false)
     }
     const __retakePicture = () => {
