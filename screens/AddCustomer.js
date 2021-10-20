@@ -1,11 +1,11 @@
 import React, { useLayoutEffect, useState, useEffect } from 'react'
-import { KeyboardAvoidingView, StyleSheet, TextInput, View, Button, Text, TouchableOpacity } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet, TextInput, View, Button, Text, TouchableOpacity, Image } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Formik } from 'formik';
 import { auth, db } from '../firebase';
 import * as yup from 'yup';
 import { useSelector, useDispatch } from "react-redux";
-import { Image } from "react-native-elements"
+// import { Image } from "react-native-elements"
 import { AutoFocus } from 'expo-camera/build/Camera.types';
 
 // Create validation rules.
@@ -46,18 +46,16 @@ const AddCustomer = ({ navigation }) => {
 
     return (
         <KeyboardAvoidingView>
-
             {customer.image ? (
                 <View>
                     <Image style={styles.customerImage} source={{ uri: customer.image.uri }} />
+                    <Button title='Retake' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
                 </View>
             ) :
                 (
                     <Button title='Photo' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
                 )
             }
-
-
             <StatusBar style="light" />
             <View style={{ marginLeft: 'auto', marginRight: 'auto' }}>
                 <Formik
@@ -134,8 +132,9 @@ const styles = StyleSheet.create({
         marginRight: 'auto',
         marginTop: 30,
         marginBottom: 30,
-        width: 175,
-        height: 175,
+        width: 200,
+        height: 200,
+        borderRadius: 100,
     },
 
     container: {
