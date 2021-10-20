@@ -4,10 +4,14 @@ import { StatusBar } from 'expo-status-bar'
 import { Camera } from 'expo-camera';
 import CameraPreview from '../components/CameraPreview'
 import { db } from '../firebase'
+import { useDispatch } from 'react-redux';
+import { addCustomerImage } from '../features/customerSlice'
 // import TakePhoto from '../components/CameraTakePhoto'
 let camera
 
 const CustomerIdent = () => {
+
+    const dispatch = useDispatch()
 
     const [previewVisible, setPreviewVisible] = useState(false)
     const [capturedImage, setCapturedImage] = useState(null)
@@ -22,7 +26,7 @@ const CustomerIdent = () => {
     }
     const __takePicture = async () => {
         if (!camera) return
-        const photo = await camera.takePictureAsync({ base64: true })
+        const photo = await camera.takePictureAsync({ base64: false })
         setPreviewVisible(true)
         setCapturedImage(photo)
     }
@@ -30,6 +34,7 @@ const CustomerIdent = () => {
         console.log(`@CodeTropolis ~ __savePhoto capturedImage`, capturedImage);
         // const uri = capturedImage.uri;
         // db.storage().ref()
+        dispatch(addCustomerImage({ image: capturedImage }))
         setPreviewVisible(false)
     }
     const __retakePicture = () => {

@@ -4,6 +4,9 @@ import { StatusBar } from 'expo-status-bar'
 import { Formik } from 'formik';
 import { auth, db } from '../firebase';
 import * as yup from 'yup';
+import { useSelector, useDispatch } from "react-redux";
+import { Image } from "react-native-elements"
+import { AutoFocus } from 'expo-camera/build/Camera.types';
 
 // Create validation rules.
 const formSchema = yup.object({
@@ -22,6 +25,7 @@ const AddCustomer = ({ navigation }) => {
 
     const [currentUserUid, setCurrentUserUid] = useState('');
     const placeholderColor = 'gray';
+    const customer = useSelector((state) => state.customer.value);
 
 
     useEffect(() => {
@@ -43,7 +47,15 @@ const AddCustomer = ({ navigation }) => {
     return (
         <KeyboardAvoidingView>
 
-            <Button title='Photo' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
+            {customer.image ? (
+                <View>
+                    <Image style={styles.customerImage} source={{ uri: customer.image.uri }} />
+                </View>
+            ) :
+                (
+                    <Button title='Photo' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
+                )
+            }
 
 
             <StatusBar style="light" />
@@ -116,6 +128,16 @@ const AddCustomer = ({ navigation }) => {
 export default AddCustomer
 
 const styles = StyleSheet.create({
+
+    customerImage: {
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginTop: 30,
+        marginBottom: 30,
+        width: 175,
+        height: 175,
+    },
+
     container: {
         flex: 1,
         justifyContent: 'center',

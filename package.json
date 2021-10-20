@@ -10,7 +10,9 @@
   "dependencies": {
     "@react-navigation/native": "^6.0.4",
     "@react-navigation/native-stack": "^6.2.2",
+    "@reduxjs/toolkit": "^1.6.2",
     "expo": "~42.0.1",
+    "expo-camera": "~11.2.2",
     "expo-dev-client": "^0.5.1",
     "expo-screen-orientation": "~3.3.0",
     "expo-status-bar": "~1.0.4",
@@ -25,8 +27,8 @@
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-web": "~0.13.12",
-    "yup": "^0.32.9",
-    "expo-camera": "~11.2.2"
+    "react-redux": "^7.2.5",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"

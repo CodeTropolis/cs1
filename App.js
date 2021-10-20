@@ -12,7 +12,8 @@ import CustomerIdent from './screens/CustomerIdent';
 import IAP from 'react-native-iap';
 import { validateReceipt } from './services/validateReceipt';
 import * as RootNavigation from './services/rootNavigation';
-
+import { Provider } from 'react-redux';
+import { store } from './store';
 // This stack will contain all the pages.
 const Stack = createNativeStackNavigator();
 
@@ -80,17 +81,19 @@ export default function App() {
     )
   } else {
     return (
-      <NavigationContainer>
-        {/* <Stack.Navigator initialRouteName={subscriptionIsExpired ? 'Subscribe' : 'Customers'} screenOptions={globalScreenOptions}> */}
-        <Stack.Navigator initialRouteName={'Customers'} screenOptions={globalScreenOptions}>
-          <Stack.Screen name='Register' component={Register} />
-          <Stack.Screen name='Login' component={Login} />
-          <Stack.Screen name='Customers' component={Customers} />
-          <Stack.Screen name='AddCustomer' component={AddCustomer} />
-          <Stack.Screen name='Subscribe' component={Subscribe} />
-          <Stack.Screen name='CustomerIdent' component={CustomerIdent} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          {/* <Stack.Navigator initialRouteName={subscriptionIsExpired ? 'Subscribe' : 'Customers'} screenOptions={globalScreenOptions}> */}
+          <Stack.Navigator initialRouteName={'Customers'} screenOptions={globalScreenOptions}>
+            <Stack.Screen name='Register' component={Register} />
+            <Stack.Screen name='Login' component={Login} />
+            <Stack.Screen name='Customers' component={Customers} />
+            <Stack.Screen name='AddCustomer' component={AddCustomer} />
+            <Stack.Screen name='Subscribe' component={Subscribe} />
+            <Stack.Screen name='CustomerIdent' component={CustomerIdent} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
     );
   }
 }
