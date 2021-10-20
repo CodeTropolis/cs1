@@ -7,7 +7,7 @@ import { validateReceipt } from '../services/validateReceipt';
 const Subscribe = ({ navigation }) => {
 
     const items = Platform.select({
-        ios: ['cs1_monthly_basic', 'ycs1_yearly_basic'],
+        ios: ['cs1_monthly'],
         android: ['']
     });
 

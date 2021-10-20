@@ -7,7 +7,7 @@ import firebase from 'firebase'
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyCRum-FgxWzx_MxrjItGFoVrt5MphjUMIY",
+    apiKey: "AIzaSyAar-m9GFMBDO1uMHTBxiwmLbj5i1lNg_E",
     authDomain: "react-native-8bfa7.firebaseapp.com",
     projectId: "react-native-8bfa7",
     storageBucket: "react-native-8bfa7.appspot.com",
