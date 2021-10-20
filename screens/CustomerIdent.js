@@ -30,11 +30,8 @@ const CustomerIdent = () => {
         setPreviewVisible(true)
         setCapturedImage(photo)
     }
-    const __savePhoto = () => {
-        console.log(`@CodeTropolis ~ __savePhoto capturedImage`, capturedImage);
-        // const uri = capturedImage.uri;
-        // db.storage().ref()
-        dispatch(addCustomerImage({ image: capturedImage }))
+    const __usePhoto = () => {
+        dispatch(addCustomerImage(capturedImage))
         setPreviewVisible(false)
     }
     const __retakePicture = () => {
@@ -68,7 +65,7 @@ const CustomerIdent = () => {
                 }}
             >
                 {previewVisible && capturedImage ? (
-                    <CameraPreview photo={capturedImage} savePhoto={__savePhoto} retakePicture={__retakePicture} />
+                    <CameraPreview photo={capturedImage} savePhoto={__usePhoto} retakePicture={__retakePicture} />
                 ) : (
                     // <TakePhoto cameraType={cameraType} flashMode={flashMode} switchCamera={__switchCamera} takePhoto={__takePicture} />
                     <Camera
