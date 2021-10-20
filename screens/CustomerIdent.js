@@ -9,7 +9,7 @@ import { addCustomerImage } from '../features/customerSlice'
 // import TakePhoto from '../components/CameraTakePhoto'
 let camera
 
-const CustomerIdent = () => {
+const CustomerIdent = ({ navigation }) => {
 
     const dispatch = useDispatch()
 
@@ -33,6 +33,7 @@ const CustomerIdent = () => {
     const __usePhoto = () => {
         dispatch(addCustomerImage(capturedImage))
         setPreviewVisible(false)
+        navigation.navigate('AddCustomer')
     }
     const __retakePicture = () => {
         setCapturedImage(null)

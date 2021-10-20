@@ -67,7 +67,7 @@ const CameraPreview = ({ photo, retakePicture, savePhoto }) => {
                                     fontSize: 20
                                 }}
                             >
-                                Save Picture
+                                Use Picture
                             </Text>
                         </TouchableOpacity>
                     </View>
