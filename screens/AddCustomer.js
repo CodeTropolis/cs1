@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState, useEffect } from 'react'
 import { KeyboardAvoidingView, Keyboard, StyleSheet, TextInput, View, Button, Text, TouchableOpacity, Image, Platform, SafeAreaView, TouchableWithoutFeedback } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Formik } from 'formik';
-import { auth, db } from '../firebase';
+import { auth, db, dbStorage } from '../firebase';
 import * as yup from 'yup';
 import { useSelector, useDispatch } from "react-redux";
 // import { Image } from "react-native-elements"
@@ -14,11 +14,11 @@ const formSchema = yup.object({
     first_name: yup.string()
         .required('First name is required')
         .min(2, 'At least two characters required.'),
-    last_name: yup.string()
-        .required('Last name is required')
-        .min(2, 'At least two characters required.'),
-    email: yup.string().email('Email format invalid.').required('Email is required.'),
-    phone: yup.string().required('Phone is required.'),
+    // last_name: yup.string()
+    //     .required('Last name is required')
+    //     .min(2, 'At least two characters required.'),
+    // email: yup.string().email('Email format invalid.').required('Email is required.'),
+    // phone: yup.string().required('Phone is required.'),
 })
 
 const AddCustomer = ({ navigation }) => {
@@ -71,14 +71,25 @@ const AddCustomer = ({ navigation }) => {
                         <StatusBar style="light" />
 
                         <Formik
-                            initialValues={{ first_name: '', last_name: '', email: '', phone: '', notes: '' }}
+                            // initialValues={{ first_name: '', last_name: '', email: '', phone: '', notes: '' }}
+                            initialValues={{ first_name: '' }}
                             validationSchema={formSchema}
                             onSubmit={(values, actions) => {
                                 db.collection('users').doc(currentUserUid).collection('customers').add(values)
-                                    .then(data => {
-                                        console.log(customer.image)
+                                    .then(async data => {
+                                        console.log('add to firestore then ~ customer.image: ', customer.image)
+                                        const uri = customer.image.uri;
+                                        const path = `${currentUserUid}/${data.id}/${Date.now()}.jpg`;
+                                        uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+                                        const response = await fetch(uploadUri);
+                                        const blob = await response.blob();
+                                        dbStorage.ref(path).put(blob)
+                                            .then((snapshot) => {
+                                                //You can check the image is now uploaded in the storage bucket
+                                                console.log(`${path} has been successfully uploaded.`);
+                                            })
+
                                     })
-                                // db.storage()
                                 actions.resetForm();
                             }}>
                             {(props) => (
@@ -94,7 +105,7 @@ const AddCustomer = ({ navigation }) => {
                                     {/* Yup attaches errors object to props */}
                                     {props.touched.first_name && props.errors.first_name ? <Text style={styles.error}>{props.errors.first_name}</Text> : null}
 
-                                    <TextInput
+                                    {/* <TextInput
                                         style={styles.input}
                                         placeholder='Last name'
                                         placeholderTextColor={placeholderColor}
@@ -129,7 +140,7 @@ const AddCustomer = ({ navigation }) => {
                                         placeholderTextColor={placeholderColor}
                                         onChangeText={props.handleChange('notes')}
                                         value={props.values.notes}
-                                    />
+                                    /> */}
                                     <Button title='Submit' color='maroon' onPress={props.handleSubmit} />
                                 </View>
                             )}

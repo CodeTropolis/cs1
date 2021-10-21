@@ -32,6 +32,7 @@ const CustomerIdent = ({ navigation }) => {
     }
     const __usePhoto = () => {
         dispatch(addCustomerImage(capturedImage))
+        console.log(`@CodeTropolis ~ CustomerIdent ~ capturedImage`, capturedImage);
         setPreviewVisible(false)
         navigation.navigate('AddCustomer')
     }

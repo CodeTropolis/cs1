@@ -12,7 +12,7 @@ export const customerSlice = createSlice({
     initialState,
     reducers: {
         addCustomerImage: (state, action) => {
-            console.log(`@CodeTropolis ~ action`, action);
+            // console.log(`@CodeTropolis ~ action`, action);
             state.value.image = action.payload;
         }
     }
