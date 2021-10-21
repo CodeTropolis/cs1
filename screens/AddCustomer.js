@@ -1,12 +1,12 @@
 import React, { useLayoutEffect, useState, useEffect } from 'react'
-import { KeyboardAvoidingView, StyleSheet, TextInput, View, Button, Text, TouchableOpacity, Image } from 'react-native'
+import { KeyboardAvoidingView, Keyboard, StyleSheet, TextInput, View, Button, Text, TouchableOpacity, Image, Platform, SafeAreaView, TouchableWithoutFeedback } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Formik } from 'formik';
 import { auth, db } from '../firebase';
 import * as yup from 'yup';
 import { useSelector, useDispatch } from "react-redux";
 // import { Image } from "react-native-elements"
-import { AutoFocus } from 'expo-camera/build/Camera.types';
+import { v4 as uuid } from 'uuid'
 
 // Create validation rules.
 const formSchema = yup.object({
@@ -45,80 +45,98 @@ const AddCustomer = ({ navigation }) => {
 
 
     return (
-        <KeyboardAvoidingView>
-            {customer.image ? (
-                <View>
-                    <Image style={styles.customerImage} source={{ uri: customer.image.uri }} />
-                    <Button title='Retake' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
-                </View>
-            ) :
-                (
-                    <Button title='Photo' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
-                )
-            }
-            <StatusBar style="light" />
-            <View style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                <Formik
-                    initialValues={{ first_name: '', last_name: '', email: '', phone: '', notes: '' }}
-                    validationSchema={formSchema}
-                    onSubmit={(values, actions) => {
-                        db.collection('users').doc(currentUserUid).collection('customers').add(values);
-                        actions.resetForm();
-                    }}>
-                    {(props) => (
-                        <View>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={props.handleChange('first_name')}
-                                value={props.values.first_name}
-                                placeholder="First name"
-                                placeholderTextColor={placeholderColor}
-                                onBlur={props.handleBlur('first_name')}
-                            />
-                            {/* Yup attaches errors object to props */}
-                            {props.touched.first_name && props.errors.first_name ? <Text style={styles.error}>{props.errors.first_name}</Text> : null}
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}
+        >
+            <SafeAreaView style={styles.container}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={styles.inner}>
+                        {customer.image ? (
 
-                            <TextInput
-                                style={styles.input}
-                                placeholder='Last name'
-                                placeholderTextColor={placeholderColor}
-                                onChangeText={props.handleChange('last_name')}
-                                value={props.values.last_name}
-                                onBlur={props.handleBlur('last_name')}
-                            />
-                            {props.touched.last_name && props.errors.last_name ? <Text style={styles.error}>{props.errors.last_name}</Text> : null}
-                            <TextInput
-                                style={styles.input}
-                                placeholder='Email'
-                                placeholderTextColor={placeholderColor}
-                                onChangeText={props.handleChange('email')}
-                                value={props.values.email}
-                                onBlur={props.handleBlur('email')}
-                            />
-                            {props.touched.email && props.errors.email ? <Text style={styles.error}>{props.errors.email}</Text> : null}
-                            <TextInput
-                                style={styles.input}
-                                placeholder='Phone'
-                                placeholderTextColor={placeholderColor}
-                                onChangeText={props.handleChange('phone')}
-                                value={props.values.phone}
-                                keyboardType='numeric'
-                                onBlur={props.handleBlur('phone')}
-                            />
-                            {props.touched.phone && props.errors.phone ? <Text style={styles.error}>{props.errors.phone}</Text> : null}
-                            <TextInput
-                                multiline
-                                style={styles.input}
-                                placeholder='Notes...'
-                                placeholderTextColor={placeholderColor}
-                                onChangeText={props.handleChange('notes')}
-                                value={props.values.notes}
-                            />
-                            <Button title='Submit' color='maroon' onPress={props.handleSubmit} />
-                        </View>
-                    )}
-                </Formik>
-            </View>
+                            <>
+                                <Image
+                                    style={styles.customerImage}
+                                    source={{ uri: customer.image.uri }}
+                                />
+                                <Button title='Retake' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
+                            </>
+
+                        ) :
+                            (
+                                <Button title='Photo' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
+                            )
+                        }
+
+                        <StatusBar style="light" />
+
+                        <Formik
+                            initialValues={{ first_name: '', last_name: '', email: '', phone: '', notes: '' }}
+                            validationSchema={formSchema}
+                            onSubmit={(values, actions) => {
+                                db.collection('users').doc(currentUserUid).collection('customers').add(values)
+                                    .then(data => {
+                                        console.log(customer.image)
+                                    })
+                                // db.storage()
+                                actions.resetForm();
+                            }}>
+                            {(props) => (
+                                <View>
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={props.handleChange('first_name')}
+                                        value={props.values.first_name}
+                                        placeholder="First name"
+                                        placeholderTextColor={placeholderColor}
+                                        onBlur={props.handleBlur('first_name')}
+                                    />
+                                    {/* Yup attaches errors object to props */}
+                                    {props.touched.first_name && props.errors.first_name ? <Text style={styles.error}>{props.errors.first_name}</Text> : null}
+
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder='Last name'
+                                        placeholderTextColor={placeholderColor}
+                                        onChangeText={props.handleChange('last_name')}
+                                        value={props.values.last_name}
+                                        onBlur={props.handleBlur('last_name')}
+                                    />
+                                    {props.touched.last_name && props.errors.last_name ? <Text style={styles.error}>{props.errors.last_name}</Text> : null}
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder='Email'
+                                        placeholderTextColor={placeholderColor}
+                                        onChangeText={props.handleChange('email')}
+                                        value={props.values.email}
+                                        onBlur={props.handleBlur('email')}
+                                    />
+                                    {props.touched.email && props.errors.email ? <Text style={styles.error}>{props.errors.email}</Text> : null}
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder='Phone'
+                                        placeholderTextColor={placeholderColor}
+                                        onChangeText={props.handleChange('phone')}
+                                        value={props.values.phone}
+                                        keyboardType='numeric'
+                                        onBlur={props.handleBlur('phone')}
+                                    />
+                                    {props.touched.phone && props.errors.phone ? <Text style={styles.error}>{props.errors.phone}</Text> : null}
+                                    <TextInput
+                                        multiline
+                                        style={styles.input}
+                                        placeholder='Notes...'
+                                        placeholderTextColor={placeholderColor}
+                                        onChangeText={props.handleChange('notes')}
+                                        value={props.values.notes}
+                                    />
+                                    <Button title='Submit' color='maroon' onPress={props.handleSubmit} />
+                                </View>
+                            )}
+                        </Formik>
+                    </View>
+                </TouchableWithoutFeedback>
+            </SafeAreaView>
         </KeyboardAvoidingView>
     )
 }
@@ -136,12 +154,14 @@ const styles = StyleSheet.create({
         height: 200,
         borderRadius: 100,
     },
-
     container: {
         flex: 1,
-        justifyContent: 'center',
-        padding: 10,
         backgroundColor: 'white',
+    },
+    inner: {
+        paddingBottom: 100,
+        flex: 1,
+        justifyContent: "flex-end",
     },
     button: {
         width: 200,
