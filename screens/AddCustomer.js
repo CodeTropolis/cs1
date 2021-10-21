@@ -5,8 +5,6 @@ import { Formik } from 'formik';
 import { auth, db, dbStorage } from '../firebase';
 import * as yup from 'yup';
 import { useSelector, useDispatch } from "react-redux";
-// import { Image } from "react-native-elements"
-import { v4 as uuid } from 'uuid'
 
 // Create validation rules.
 const formSchema = yup.object({
@@ -53,7 +51,6 @@ const AddCustomer = ({ navigation }) => {
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View style={styles.inner}>
                         {customer.image ? (
-
                             <>
                                 <Image
                                     style={styles.customerImage}
@@ -77,14 +74,13 @@ const AddCustomer = ({ navigation }) => {
                             onSubmit={(values, actions) => {
                                 db.collection('users').doc(currentUserUid).collection('customers').add(values)
                                     .then(async data => {
-                                        console.log('add to firestore then ~ customer.image: ', customer.image)
                                         const uri = customer.image.uri;
                                         const path = `${currentUserUid}/${data.id}/${Date.now()}.jpg`;
                                         uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
                                         const response = await fetch(uploadUri);
                                         const blob = await response.blob();
                                         dbStorage.ref(path).put(blob)
-                                            .then((snapshot) => {
+                                            .then(() => {
                                                 //You can check the image is now uploaded in the storage bucket
                                                 console.log(`${path} has been successfully uploaded.`);
                                             })
