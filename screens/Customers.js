@@ -64,6 +64,11 @@ const Customers = ({ navigation }) => {
         navigation.navigate('AddCustomer')
     }
 
+    const _editCustomer = (customer) => {
+        dispatch(editCustomer(customer))
+
+    }
+
     if (!isLoadingCustomers) {
         if (customers.length > 0) {
             return (
@@ -71,9 +76,8 @@ const Customers = ({ navigation }) => {
                     <ScrollView>
                         {customers.map((customer, i) => {
                             return (
-                                [
-                                    <CustomerListItem key={i} data={customer} onPress={() => dispatch(editCustomer(customer))} />,
-                                ]
+                                // Or wrap this in TouchableOpacity and call _editCustomer on its onPress
+                                <CustomerListItem key={i} data={customer} _editCustomer={_editCustomer} />
                             )
                         })}
                     </ScrollView>

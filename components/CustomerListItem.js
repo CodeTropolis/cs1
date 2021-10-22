@@ -3,10 +3,10 @@ import { StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 
-const CustomerListItem = ({ data }) => {
+const CustomerListItem = ({ data, _editCustomer }) => {
     return (
-        <TouchableOpacity style={styles.list} >
-            <Text>{data.first_name} {data.last_name} | Notes: {data.notes}</Text>
+        <TouchableOpacity onPress={() => _editCustomer(data)} >
+            <Text style={styles.list} >{data.first_name} {data.last_name} | Notes: {data.notes}</Text>
         </TouchableOpacity>
     )
 }
