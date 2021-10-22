@@ -4,9 +4,15 @@ import CustomerListItem from '../components/CustomerListItem'
 import { Button, Input, Image, Icon } from "react-native-elements"
 import { AntDesign } from '@expo/vector-icons'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { auth, db } from '../firebase'
+import { auth, db } from '../firebase';
+import { useDispatch, useSelector } from 'react-redux';
+import { editCustomer } from '../features/customerSlice'
 
 const Customers = ({ navigation }) => {
+
+    const dispatch = useDispatch();
+    const customer = useSelector((state) => state.customer.value);
+
 
     const [isLoadingCustomers, setIsLoadingCustomers] = useState(true);
     const [customers, setCustomers] = useState([]);
@@ -66,7 +72,7 @@ const Customers = ({ navigation }) => {
                         {customers.map((customer, i) => {
                             return (
                                 [
-                                    <CustomerListItem key={i} data={customer} />,
+                                    <CustomerListItem key={i} data={customer} onPress={() => dispatch(editCustomer(customer))} />,
                                 ]
                             )
                         })}

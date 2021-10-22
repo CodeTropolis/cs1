@@ -1,7 +1,10 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    value: {}
+    value: {
+        image: '',
+        customer: {}
+    }
 }
 
 export const customerSlice = createSlice({
@@ -11,10 +14,14 @@ export const customerSlice = createSlice({
         addCustomerImage: (state, action) => {
             // console.log(`@CodeTropolis ~ action`, action);
             state.value.image = action.payload;
+        },
+        editCustomer: (state, action) => {
+            console.log(`@CodeTropolis ~ action in editCustomer`, action);
+            state.value.customer = action.payload;
         }
     }
 })
 
-export const { addCustomerImage } = customerSlice.actions
+export const { addCustomerImage, editCustomer } = customerSlice.actions
 
 export default customerSlice.reducer;
