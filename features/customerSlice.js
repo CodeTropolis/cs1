@@ -1,10 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState = {
-    value: {
-        // id: '',
-        // image: '',
-    }
+    value: {}
 }
 
 export const customerSlice = createSlice({
