@@ -6,7 +6,8 @@ import { AntDesign } from '@expo/vector-icons'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { auth, db } from '../firebase';
 import { useDispatch, useSelector } from 'react-redux';
-import { editCustomer } from '../features/customerSlice'
+import { addCustomerImage } from '../features/customerSlice';
+import { editCustomer } from '../features/customerSlice';
 
 const Customers = ({ navigation }) => {
 
@@ -60,6 +61,7 @@ const Customers = ({ navigation }) => {
     }, [])
 
     const addCustomer = () => {
+        dispatch(addCustomerImage(null))
         // Note: navigation.replace will cause back button to not appear
         navigation.navigate('AddCustomer')
     }

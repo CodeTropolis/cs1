@@ -96,15 +96,10 @@ const AddCustomer = ({ navigation }) => {
                                 }
 
                             </View>
-                            // Check for image from customerSlice
 
                         )
                         }
-
-
-
                         <StatusBar style="light" />
-
                         <Formik
                             // initialValues={{ first_name: '', last_name: '', email: '', phone: '', notes: '' }}
                             initialValues={{ first_name: '' }}
@@ -115,7 +110,6 @@ const AddCustomer = ({ navigation }) => {
                                     db.collection('users').doc(currentUserUid).collection('customers').add(values)
 
                                 addOrUpdate.then(async data => {
-                                    console.log(`@CodeTropolis ~ AddCustomer ~  addOrUpdate.then data`, data);
                                     const uri = customer.picFromCam.uri;
                                     const path = `${currentUserUid}/${data.id}/${Date.now()}.jpg`;
                                     uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
@@ -132,9 +126,6 @@ const AddCustomer = ({ navigation }) => {
                                                         .collection('customers')
                                                         .doc(data.id)
                                                         .update({ id: data.id, customerPhotos: dbFieldValue.arrayUnion(downloadURL) })
-                                                    // .then(() => {
-                                                    //     console.log(`@CodeTropolis ~ Photo Saved`);
-                                                    // })
                                                 })
                                         })
 
