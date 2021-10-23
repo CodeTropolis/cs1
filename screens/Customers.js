@@ -66,7 +66,7 @@ const Customers = ({ navigation }) => {
 
     const _editCustomer = (customer) => {
         dispatch(editCustomer(customer))
-
+        navigation.navigate('AddCustomer')
     }
 
     if (!isLoadingCustomers) {

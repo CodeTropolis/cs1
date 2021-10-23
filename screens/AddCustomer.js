@@ -21,16 +21,28 @@ const formSchema = yup.object({
 
 const AddCustomer = ({ navigation }) => {
 
-    const [currentUserUid, setCurrentUserUid] = useState('');
-    const placeholderColor = 'gray';
     const customer = useSelector((state) => state.customer.value);
 
+    const [currentUserUid, setCurrentUserUid] = useState('');
+    const [currentCustomerId, setCurrentCustomerId] = useState('');
+    const [customerPhotoArr, setCustomerPhotoArr] = useState([]);
+    const [customerPhotoURL, setCustomerPhotoURL] = useState('');
+
+
+    const placeholderColor = 'gray';
 
     useEffect(() => {
         auth.onAuthStateChanged(user => {
             if (user) {
                 setCurrentUserUid(user.uid);
             }
+            if (customer.customerData) {
+                setCurrentCustomerId(customer.customerData.id)
+                setCustomerPhotoArr(customer.customerData.customerPhotos)
+                setCustomerPhotoURL(customerPhotoArr[customerPhotoArr.length - 1])
+                console.log(`@CodeTropolis ~ useEffect ~ customerPhotoURL`, customerPhotoURL);
+            }
+
         });
     }, [])
 
@@ -48,11 +60,25 @@ const AddCustomer = ({ navigation }) => {
             <SafeAreaView style={styles.container}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View style={styles.inner}>
-                        {customer.image ? (
+
+                        {/* {customer.customerData ? (
+                            <View>
+                                <Text>
+                                    {customer.customerData.first_name}
+                                </Text>
+                            </View>
+                        ) : (
+                            <View>
+                                <Text>No Customer</Text>
+                            </View>
+                        )
+                        } */}
+
+                        {customer.customerData ? (
                             <>
                                 <Image
                                     style={styles.customerImage}
-                                    source={{ uri: customer.image.uri }}
+                                    source={{ uri: customerPhotoURL }}
                                 />
                                 <Button title='Retake' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
                             </>
@@ -87,7 +113,7 @@ const AddCustomer = ({ navigation }) => {
                                                             .doc(currentUserUid)
                                                             .collection('customers')
                                                             .doc(data.id)
-                                                            .update({ customerPhotos: dbFieldValue.arrayUnion(downloadURL) })
+                                                            .update({ id: data.id, customerPhotos: dbFieldValue.arrayUnion(downloadURL) })
                                                         // .then(() => {
                                                         //     console.log(`@CodeTropolis ~ Photo Saved`);
                                                         // })
@@ -102,7 +128,7 @@ const AddCustomer = ({ navigation }) => {
                                     <TextInput
                                         style={styles.input}
                                         onChangeText={props.handleChange('first_name')}
-                                        value={props.values.first_name}
+                                        value={customer ? customer.first_name : props.values.first_name}
                                         placeholder="First name"
                                         placeholderTextColor={placeholderColor}
                                         onBlur={props.handleBlur('first_name')}

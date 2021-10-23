@@ -16,8 +16,7 @@ export const customerSlice = createSlice({
             state.value.image = action.payload;
         },
         editCustomer: (state, action) => {
-            console.log(`@CodeTropolis ~ action in editCustomer`, action);
-            state.value.customer = action.payload;
+            state.value.customerData = action.payload;
         }
     }
 })

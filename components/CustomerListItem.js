@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, Image } from 'react-native'
+import { StyleSheet, Text, Image, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 
@@ -16,7 +16,10 @@ const CustomerListItem = ({ data, _editCustomer }) => {
     return (
         <TouchableOpacity style={styles.list} onPress={() => _editCustomer(data)} >
             <Image style={styles.customerImage} source={{ uri: latestPhotoURL }} />
-            <Text style={styles.text}>{data.first_name} {data.last_name} | Notes: {data.notes}</Text>
+            <View style={styles.text}>
+                <Text>{data.first_name} {data.last_name}</Text>
+                <Text>Notes: {data.notes}</Text>
+            </View>
         </TouchableOpacity>
     )
 }
