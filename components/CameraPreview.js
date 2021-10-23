@@ -2,7 +2,7 @@ import React from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native'
 
 
-const CameraPreview = ({ photo, retakePicture, savePhoto }) => {
+const CameraPreview = ({ photo, retakePicture, usePhoto }) => {
     return (
         <View
             style={{
@@ -52,7 +52,7 @@ const CameraPreview = ({ photo, retakePicture, savePhoto }) => {
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={savePhoto}
+                            onPress={usePhoto}
                             style={{
                                 width: 130,
                                 height: 40,

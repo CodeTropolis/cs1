@@ -32,7 +32,6 @@ const CustomerIdent = ({ navigation }) => {
     }
     const __usePhoto = () => {
         dispatch(addCustomerImage(capturedImage))
-        console.log(`@CodeTropolis ~ CustomerIdent ~ capturedImage`, capturedImage);
         setPreviewVisible(false)
         navigation.navigate('AddCustomer')
     }
@@ -67,7 +66,7 @@ const CustomerIdent = ({ navigation }) => {
                 }}
             >
                 {previewVisible && capturedImage ? (
-                    <CameraPreview photo={capturedImage} savePhoto={__usePhoto} retakePicture={__retakePicture} />
+                    <CameraPreview photo={capturedImage} usePhoto={__usePhoto} retakePicture={__retakePicture} />
                 ) : (
                     // <TakePhoto cameraType={cameraType} flashMode={flashMode} switchCamera={__switchCamera} takePhoto={__takePicture} />
                     <Camera

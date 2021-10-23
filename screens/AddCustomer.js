@@ -2,7 +2,7 @@ import React, { useLayoutEffect, useState, useEffect } from 'react'
 import { KeyboardAvoidingView, Keyboard, StyleSheet, TextInput, View, Button, Text, TouchableOpacity, Image, Platform, SafeAreaView, TouchableWithoutFeedback } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Formik } from 'formik';
-import { auth, db, dbStorage } from '../firebase';
+import { auth, db, dbStorage, dbFieldValue } from '../firebase';
 import * as yup from 'yup';
 import { useSelector, useDispatch } from "react-redux";
 
@@ -83,6 +83,15 @@ const AddCustomer = ({ navigation }) => {
                                             .then(() => {
                                                 //You can check the image is now uploaded in the storage bucket
                                                 console.log(`${path} has been successfully uploaded.`);
+                                                dbStorage.ref(path).getDownloadURL()
+                                                    .then(downloadURL => {
+                                                        console.log(`@CodeTropolis ~ .then ~ downloadURL`, downloadURL);
+                                                        db.collection('users')
+                                                            .doc(currentUserUid)
+                                                            .collection('customers')
+                                                            .doc(data.id)
+                                                            .update({ customerImageLinks: dbFieldValue.arrayUnion(downloadURL) })
+                                                    })
                                             })
 
                                     })
