@@ -40,8 +40,6 @@ const AddCustomer = ({ navigation }) => {
         });
     }, [navigation]);
 
-
-
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -85,12 +83,14 @@ const AddCustomer = ({ navigation }) => {
                                                 console.log(`${path} has been successfully uploaded.`);
                                                 dbStorage.ref(path).getDownloadURL()
                                                     .then(downloadURL => {
-                                                        console.log(`@CodeTropolis ~ .then ~ downloadURL`, downloadURL);
                                                         db.collection('users')
                                                             .doc(currentUserUid)
                                                             .collection('customers')
                                                             .doc(data.id)
-                                                            .update({ customerImageLinks: dbFieldValue.arrayUnion(downloadURL) })
+                                                            .update({ customerPhotos: dbFieldValue.arrayUnion(downloadURL) })
+                                                        // .then(() => {
+                                                        //     console.log(`@CodeTropolis ~ Photo Saved`);
+                                                        // })
                                                     })
                                             })
 
