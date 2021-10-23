@@ -37,14 +37,20 @@ const AddCustomer = ({ navigation }) => {
                 setCurrentUserUid(user.uid);
             }
             if (customer.customerData) {
-                setCurrentCustomerId(customer.customerData.id)
-                setCustomerPhotoArr(customer.customerData.customerPhotos)
-                setCustomerPhotoURL(customerPhotoArr[customerPhotoArr.length - 1])
-                console.log(`@CodeTropolis ~ useEffect ~ customerPhotoURL`, customerPhotoURL);
+                console.log(`useEffect ~ customer.customerData: `, JSON.stringify(customer.customerData));
+                setCurrentCustomerId(customer.customerData.id);
+                console.log(`useEffect ~ currentCustomerId`, currentCustomerId);
+                if (customer.customerData.customerPhotos) {
+                    setCustomerPhotoArr(customer.customerData.customerPhotos);
+                    console.log(`useEffect ~ customerPhotoArr`, customerPhotoArr);
+                    setCustomerPhotoURL(customerPhotoArr[customerPhotoArr.length - 1])
+                    console.log(`@CodeTropolis ~ useEffect ~ customerPhotoURL`, customerPhotoURL);
+                }
             }
 
+
         });
-    }, [])
+    }, [currentCustomerId, customerPhotoArr, customerPhotoURL])
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -60,34 +66,42 @@ const AddCustomer = ({ navigation }) => {
             <SafeAreaView style={styles.container}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View style={styles.inner}>
-
-                        {/* {customer.customerData ? (
-                            <View>
-                                <Text>
-                                    {customer.customerData.first_name}
-                                </Text>
-                            </View>
-                        ) : (
-                            <View>
-                                <Text>No Customer</Text>
-                            </View>
-                        )
-                        } */}
-
-                        {customer.customerData ? (
+                        {/* Editing an existing customer so photo should be present. */}
+                        {customer.customerData && customerPhotoURL ? (
                             <>
                                 <Image
                                     style={styles.customerImage}
-                                    source={{ uri: customerPhotoURL }}
+                                    // User may retake pic so if theres a value for customer.picFromCam, show it here, else show customerPhotoURL
+                                    source={{ uri: customer.picFromCam ? customer.picFromCam.uri : customerPhotoURL }}
                                 />
                                 <Button title='Retake' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
                             </>
 
-                        ) :
-                            (
-                                <Button title='Photo' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
-                            )
+                        ) : (
+                            // Else no customer data so we must be creating a new customer (Pressing + Customer from Customers page.).
+                            <View>
+                                {
+                                    // Do we have a pic from customerSlice? If so, show it, if not show a button to take the photo.
+                                    customer.picFromCam ? (
+                                        <View>
+                                            <Image
+                                                style={styles.customerImage}
+                                                source={{ uri: customer.picFromCam.uri }}
+                                            />
+                                            <Button title='Retake Picture' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
+                                        </View>
+                                    ) : (
+                                        <Button title='Take Picture' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
+                                    )
+                                }
+
+                            </View>
+                            // Check for image from customerSlice
+
+                        )
                         }
+
+
 
                         <StatusBar style="light" />
 
@@ -96,31 +110,36 @@ const AddCustomer = ({ navigation }) => {
                             initialValues={{ first_name: '' }}
                             validationSchema={formSchema}
                             onSubmit={(values, actions) => {
-                                db.collection('users').doc(currentUserUid).collection('customers').add(values)
-                                    .then(async data => {
-                                        const uri = customer.image.uri;
-                                        const path = `${currentUserUid}/${data.id}/${Date.now()}.jpg`;
-                                        uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
-                                        const response = await fetch(uploadUri);
-                                        const blob = await response.blob();
-                                        dbStorage.ref(path).put(blob)
-                                            .then(() => {
-                                                //You can check the image is now uploaded in the storage bucket
-                                                console.log(`${path} has been successfully uploaded.`);
-                                                dbStorage.ref(path).getDownloadURL()
-                                                    .then(downloadURL => {
-                                                        db.collection('users')
-                                                            .doc(currentUserUid)
-                                                            .collection('customers')
-                                                            .doc(data.id)
-                                                            .update({ id: data.id, customerPhotos: dbFieldValue.arrayUnion(downloadURL) })
-                                                        // .then(() => {
-                                                        //     console.log(`@CodeTropolis ~ Photo Saved`);
-                                                        // })
-                                                    })
-                                            })
+                                const addOrUpdate = currentCustomerId !== '' ?
+                                    db.collection('users').doc(currentUserUid).collection('customers').doc(currentCustomerId).set(values, { merge: true }) :
+                                    db.collection('users').doc(currentUserUid).collection('customers').add(values)
 
-                                    })
+                                addOrUpdate.then(async data => {
+                                    console.log(`@CodeTropolis ~ AddCustomer ~  addOrUpdate.then data`, data);
+                                    const uri = customer.picFromCam.uri;
+                                    const path = `${currentUserUid}/${data.id}/${Date.now()}.jpg`;
+                                    uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+                                    const response = await fetch(uploadUri);
+                                    const blob = await response.blob();
+                                    dbStorage.ref(path).put(blob)
+                                        .then(() => {
+                                            //You can check the image is now uploaded in the storage bucket
+                                            console.log(`${path} has been successfully uploaded.`);
+                                            dbStorage.ref(path).getDownloadURL()
+                                                .then(downloadURL => {
+                                                    db.collection('users')
+                                                        .doc(currentUserUid)
+                                                        .collection('customers')
+                                                        .doc(data.id)
+                                                        .update({ id: data.id, customerPhotos: dbFieldValue.arrayUnion(downloadURL) })
+                                                    // .then(() => {
+                                                    //     console.log(`@CodeTropolis ~ Photo Saved`);
+                                                    // })
+                                                })
+                                        })
+
+                                })
+
                                 actions.resetForm();
                             }}>
                             {(props) => (
