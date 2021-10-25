@@ -27,8 +27,6 @@ const AddCustomer = ({ navigation }) => {
     const [currentCustomerId, setCurrentCustomerId] = useState('');
     const [customerPhotoArr, setCustomerPhotoArr] = useState([]);
     const [customerPhotoURL, setCustomerPhotoURL] = useState('');
-    const [isEditing, setIsEditing] = useState(false);
-
 
     const placeholderColor = 'gray';
 
@@ -38,15 +36,15 @@ const AddCustomer = ({ navigation }) => {
                 setCurrentUserUid(user.uid);
             }
             if (customer.customerData) {
+                console.log(`@CT ~ file: AddCustomer.js ~ line 41 ~ useEffect ~ customer`, customer);
                 setCurrentCustomerId(customer.customerData.id);
                 setCustomerPhotoArr(customer.customerData.customerPhotos);
                 setCustomerPhotoURL(customerPhotoArr[customerPhotoArr.length - 1]);
-                setIsEditing(customer.customerData.isEditing);
             }
 
 
         });
-    }, [isEditing, currentCustomerId, customerPhotoArr])
+    }, [currentCustomerId, customerPhotoArr])
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -65,14 +63,14 @@ const AddCustomer = ({ navigation }) => {
                         {/* Editing an existing customer so photo should be present. */}
                         {customer.customerData && customerPhotoURL ? (
                             <>
-                                <Text>Is Editing: {isEditing}</Text>
+                                {/* In JSX boolean value will not render. */}
+                                {/* <Text>Is Editing: {isEditing}</Text> */}
                                 <Text> {currentCustomerId}</Text>
-                                <Text>{customerPhotoURL}</Text>
-
+                                {/* <Text>{customerPhotoURL}</Text> */}
                                 <Image
                                     style={styles.customerImage}
                                     // User may retake pic so if theres a value for customer.picFromCam, show it here, else show customerPhotoURL
-                                    source={{ uri: customer.picFromCam ? customer.picFromCam.uri : customerPhotoURL }}
+                                    source={customer.picFromCam ? { uri: customer.picFromCam.uri } : { uri: customerPhotoURL }}
                                 />
                                 <Button title='Retake' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
                             </>
