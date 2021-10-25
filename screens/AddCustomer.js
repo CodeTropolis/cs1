@@ -53,6 +53,31 @@ const AddCustomer = ({ navigation }) => {
     }, [navigation]);
 
 
+    const updateCustomer = async (values) => {
+        db.collection('users').doc(currentUserUid).collection('customers').doc(currentCustomerId).set(values, { merge: true })
+            .then(() => {
+                console.log(`@CT ~ file: AddCustomer.js EDITING CUSTOMER ~ line 134`);
+                // User may or may not update the photo
+                if (customer.picFromCam && customer.picFromCam.uri) {
+                    savePhoto(currentCustomerId)
+                }
+
+            })
+    }
+
+    const saveNewCustomer = (values) => {
+        db.collection('users').doc(currentUserUid).collection('customers')
+            .add(values)
+            .then(returnData => {
+                db.doc(returnData.path).update({ id: returnData.id })
+                // ToDo: No check here as customer.picFromCam.uri should always have a value when creating a
+                // ToDo: new customer because user will be required to take a photo. Enforce on UI.
+                if (customer.picFromCam.uri) {
+                    savePhoto(returnData.id)
+                }
+            });
+    }
+
     const savePhoto = async (customerId) => {
         const uri = customer.picFromCam.uri;
         const path = `${currentUserUid}/${customerId}/${Date.now()}.jpg`;
@@ -87,9 +112,6 @@ const AddCustomer = ({ navigation }) => {
                         {customer.customerData && customerPhotoURL ? (
                             <>
                                 {/* In JSX boolean value will not render. */}
-                                {/* <Text>Is Editing: {isEditing}</Text> */}
-                                {/* <Text> {currentCustomerId}</Text> */}
-                                {/* <Text>{customerPhotoURL}</Text> */}
                                 <Image
                                     style={styles.customerImage}
                                     // User may retake pic. If so, show the value for customer.picFromCam, else show customerPhotoURL
@@ -127,30 +149,7 @@ const AddCustomer = ({ navigation }) => {
                             initialValues={{ first_name: '' }}
                             validationSchema={formSchema}
                             onSubmit={(values, actions) => {
-                                currentCustomerId !== '' ?
-                                    // Editing an existing customer
-                                    db.collection('users').doc(currentUserUid).collection('customers').doc(currentCustomerId).set(values, { merge: true })
-                                        .then(() => {
-                                            console.log(`@CT ~ file: AddCustomer.js EDITING CUSTOMER ~ line 134`);
-                                            // User may or may not update the photo
-                                            if (customer.picFromCam && customer.picFromCam.uri) {
-                                                savePhoto(currentCustomerId)
-                                            }
-
-                                        })
-                                    :
-                                    // Else creating a new customer.
-                                    db.collection('users').doc(currentUserUid).collection('customers')
-                                        .add(values)
-                                        .then(returnData => {
-                                            db.doc(returnData.path).update({ id: returnData.id })
-                                            // ToDo: No check here as customer.picFromCam.uri should always have a value when creating a
-                                            // ToDo: new customer because user will be required to take a photo. Enforce on UI.
-                                            if (customer.picFromCam.uri) {
-                                                savePhoto(returnData.id)
-                                            }
-                                        });
-
+                                currentCustomerId !== '' ? updateCustomer(values) : saveNewCustomer(values);
                                 actions.resetForm();
                             }}>
                             {(props) => (
