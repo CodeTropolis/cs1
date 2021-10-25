@@ -115,13 +115,12 @@ const AddCustomer = ({ navigation }) => {
                                     // User may retake pic. If so, show the value for customer.picFromCam, else show customerPhotoURL
                                     source={customer.picFromCam ? { uri: customer.picFromCam.uri } : { uri: customerPhotoURL }}
                                 />
-                                {customer.picFromCam && <Text>{customer.picFromCam.uri}</Text>}
                                 <Button title='Retake' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
                             </>
 
                         ) : (
                             // Else no customer data so we must be creating a new customer.
-                            <View>
+                            <>
                                 {
                                     // Do we have a pic from customerSlice? If so, show it, if not show a button to take the photo.
                                     customer.picFromCam ? (
@@ -137,7 +136,7 @@ const AddCustomer = ({ navigation }) => {
                                     )
                                 }
 
-                            </View>
+                            </>
 
                         )
                         }
