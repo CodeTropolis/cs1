@@ -52,6 +52,29 @@ const AddCustomer = ({ navigation }) => {
         });
     }, [navigation]);
 
+
+    const savePhoto = async (customerId) => {
+        const uri = customer.picFromCam.uri;
+        const path = `${currentUserUid}/${customerId}/${Date.now()}.jpg`;
+        uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+        const response = await fetch(uploadUri);
+        const blob = await response.blob();
+        dbStorage.ref(path).put(blob)
+            .then(() => {
+                //You can check the image is now uploaded in the storage bucket
+                // Add in the customer ID and image link to the customer's doc.
+                console.log(`${path} has been successfully uploaded.`);
+                dbStorage.ref(path).getDownloadURL()
+                    .then(downloadURL => {
+                        db.collection('users')
+                            .doc(currentUserUid)
+                            .collection('customers')
+                            .doc(customerId)
+                            .update({ customerPhotos: dbFieldValue.arrayUnion(downloadURL) })
+                    })
+            })
+    }
+
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -65,18 +88,19 @@ const AddCustomer = ({ navigation }) => {
                             <>
                                 {/* In JSX boolean value will not render. */}
                                 {/* <Text>Is Editing: {isEditing}</Text> */}
-                                <Text> {currentCustomerId}</Text>
+                                {/* <Text> {currentCustomerId}</Text> */}
                                 {/* <Text>{customerPhotoURL}</Text> */}
                                 <Image
                                     style={styles.customerImage}
-                                    // User may retake pic so if theres a value for customer.picFromCam, show it here, else show customerPhotoURL
+                                    // User may retake pic. If so, show the value for customer.picFromCam, else show customerPhotoURL
                                     source={customer.picFromCam ? { uri: customer.picFromCam.uri } : { uri: customerPhotoURL }}
                                 />
+                                {customer.picFromCam && <Text>{customer.picFromCam.uri}</Text>}
                                 <Button title='Retake' color='maroon' onPress={() => navigation.navigate('CustomerIdent')} />
                             </>
 
                         ) : (
-                            // Else no customer data so we must be creating a new customer (Pressing + Customer from Customers page.).
+                            // Else no customer data so we must be creating a new customer.
                             <View>
                                 {
                                     // Do we have a pic from customerSlice? If so, show it, if not show a button to take the photo.
@@ -103,34 +127,29 @@ const AddCustomer = ({ navigation }) => {
                             initialValues={{ first_name: '' }}
                             validationSchema={formSchema}
                             onSubmit={(values, actions) => {
-                                const addOrUpdate = currentCustomerId !== '' ?
-                                    db.collection('users').doc(currentUserUid).collection('customers').doc(currentCustomerId).set(values, { merge: true }) :
-                                    db.collection('users').doc(currentUserUid).collection('customers').add(values)
-
-                                addOrUpdate.then(async data => {
-                                    const customerId = currentCustomerId !== '' ? currentCustomerId : data.id;
-                                    console.log(`@CT ~ file: AddCustomer.js ~ line 112 ~ AddCustomer ~ customerId`, customerId);
-                                    const uri = customer.picFromCam.uri;
-                                    const path = `${currentUserUid}/${customerId}/${Date.now()}.jpg`;
-                                    uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
-                                    const response = await fetch(uploadUri);
-                                    const blob = await response.blob();
-                                    dbStorage.ref(path).put(blob)
+                                currentCustomerId !== '' ?
+                                    // Editing an existing customer
+                                    db.collection('users').doc(currentUserUid).collection('customers').doc(currentCustomerId).set(values, { merge: true })
                                         .then(() => {
-                                            //You can check the image is now uploaded in the storage bucket
-                                            // Add in the customer ID and image link to the customer's doc.
-                                            console.log(`${path} has been successfully uploaded.`);
-                                            dbStorage.ref(path).getDownloadURL()
-                                                .then(downloadURL => {
-                                                    db.collection('users')
-                                                        .doc(currentUserUid)
-                                                        .collection('customers')
-                                                        .doc(customerId)
-                                                        .update({ id: customerId, customerPhotos: dbFieldValue.arrayUnion(downloadURL) })
-                                                })
-                                        })
+                                            console.log(`@CT ~ file: AddCustomer.js EDITING CUSTOMER ~ line 134`);
+                                            // User may or may not update the photo
+                                            if (customer.picFromCam && customer.picFromCam.uri) {
+                                                savePhoto(currentCustomerId)
+                                            }
 
-                                })
+                                        })
+                                    :
+                                    // Else creating a new customer.
+                                    db.collection('users').doc(currentUserUid).collection('customers')
+                                        .add(values)
+                                        .then(returnData => {
+                                            db.doc(returnData.path).update({ id: returnData.id })
+                                            // ToDo: No check here as customer.picFromCam.uri should always have a value when creating a
+                                            // ToDo: new customer because user will be required to take a photo. Enforce on UI.
+                                            if (customer.picFromCam.uri) {
+                                                savePhoto(returnData.id)
+                                            }
+                                        });
 
                                 actions.resetForm();
                             }}>
