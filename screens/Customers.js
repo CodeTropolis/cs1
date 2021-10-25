@@ -68,7 +68,6 @@ const Customers = ({ navigation }) => {
     }
 
     const _editCustomer = (customer) => {
-        console.log(`@CT ~ file: Customers.js ~ line 71 ~ Customers ~ customer`, customer);
         dispatch(addCustomerImage(null))
         dispatch(editCustomer(customer))
         navigation.navigate('AddCustomer')

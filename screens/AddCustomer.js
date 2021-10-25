@@ -36,7 +36,7 @@ const AddCustomer = ({ navigation }) => {
                 setCurrentUserUid(user.uid);
             }
             if (customer.customerData) {
-                console.log(`@CT ~ file: AddCustomer.js ~ line 41 ~ useEffect ~ customer`, customer);
+                // console.log(`@CT ~ file: AddCustomer.js ~ line 41 ~ useEffect ~ customer`, customer);
                 setCurrentCustomerId(customer.customerData.id);
                 setCustomerPhotoArr(customer.customerData.customerPhotos);
                 setCustomerPhotoURL(customerPhotoArr[customerPhotoArr.length - 1]);
@@ -108,7 +108,8 @@ const AddCustomer = ({ navigation }) => {
                                     db.collection('users').doc(currentUserUid).collection('customers').add(values)
 
                                 addOrUpdate.then(async data => {
-                                    const customerId = data.id;
+                                    const customerId = currentCustomerId !== '' ? currentCustomerId : data.id;
+                                    console.log(`@CT ~ file: AddCustomer.js ~ line 112 ~ AddCustomer ~ customerId`, customerId);
                                     const uri = customer.picFromCam.uri;
                                     const path = `${currentUserUid}/${customerId}/${Date.now()}.jpg`;
                                     uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
@@ -138,7 +139,8 @@ const AddCustomer = ({ navigation }) => {
                                     <TextInput
                                         style={styles.input}
                                         onChangeText={props.handleChange('first_name')}
-                                        value={customer ? customer.first_name : props.values.first_name}
+                                        // value={customer.customerData ? customer.customerData.first_name : props.values.first_name}
+                                        value={props.values.first_name}
                                         placeholder="First name"
                                         placeholderTextColor={placeholderColor}
                                         onBlur={props.handleBlur('first_name')}
