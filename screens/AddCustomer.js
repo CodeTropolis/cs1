@@ -36,7 +36,6 @@ const AddCustomer = ({ navigation }) => {
                 setCurrentUserUid(user.uid);
             }
             if (customer.customerData) {
-                // console.log(`@CT ~ file: AddCustomer.js ~ line 41 ~ useEffect ~ customer`, customer);
                 setCurrentCustomerId(customer.customerData.id);
                 setCustomerPhotoArr(customer.customerData.customerPhotos);
                 setCustomerPhotoURL(customerPhotoArr[customerPhotoArr.length - 1]);
@@ -53,7 +52,7 @@ const AddCustomer = ({ navigation }) => {
     }, [navigation]);
 
 
-    const updateCustomer = async (values) => {
+    const updateCustomer = (values) => {
         db.collection('users').doc(currentUserUid).collection('customers').doc(currentCustomerId).set(values, { merge: true })
             .then(() => {
                 console.log(`@CT ~ file: AddCustomer.js EDITING CUSTOMER ~ line 134`);
@@ -70,8 +69,7 @@ const AddCustomer = ({ navigation }) => {
             .add(values)
             .then(returnData => {
                 db.doc(returnData.path).update({ id: returnData.id })
-                // ToDo: No check here as customer.picFromCam.uri should always have a value when creating a
-                // ToDo: new customer because user will be required to take a photo. Enforce on UI.
+                // ToDo: No check here. Enforce on UI. so that customer.picFromCam.uri always has a value when creating a new customer. 
                 if (customer.picFromCam.uri) {
                     savePhoto(returnData.id)
                 }
