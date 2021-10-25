@@ -16,6 +16,7 @@ export const customerSlice = createSlice({
             state.value.picFromCam = action.payload;
         },
         editCustomer: (state, action) => {
+            console.log(`@CT ~ file: customerSlice.js ~ line 19 ~ action`, action.payload);
             state.value.customerData = action.payload;
         }
     }

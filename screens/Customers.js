@@ -62,12 +62,14 @@ const Customers = ({ navigation }) => {
 
     const addCustomer = () => {
         dispatch(addCustomerImage(null))
+        dispatch(editCustomer(null))
         // Note: navigation.replace will cause back button to not appear
         navigation.navigate('AddCustomer')
     }
 
     const _editCustomer = (customer) => {
-        dispatch(editCustomer(customer))
+        // console.log(`@CodeTropolis ~ Customers ~ _editCustomer customer`, customer);
+        dispatch(editCustomer({ isEditing: true, ...customer }))
         navigation.navigate('AddCustomer')
     }
 

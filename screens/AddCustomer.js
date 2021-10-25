@@ -27,6 +27,7 @@ const AddCustomer = ({ navigation }) => {
     const [currentCustomerId, setCurrentCustomerId] = useState('');
     const [customerPhotoArr, setCustomerPhotoArr] = useState([]);
     const [customerPhotoURL, setCustomerPhotoURL] = useState('');
+    const [isEditing, setIsEditing] = useState(false);
 
 
     const placeholderColor = 'gray';
@@ -37,20 +38,15 @@ const AddCustomer = ({ navigation }) => {
                 setCurrentUserUid(user.uid);
             }
             if (customer.customerData) {
-                console.log(`useEffect ~ customer.customerData: `, JSON.stringify(customer.customerData));
                 setCurrentCustomerId(customer.customerData.id);
-                console.log(`useEffect ~ currentCustomerId`, currentCustomerId);
-                if (customer.customerData.customerPhotos) {
-                    setCustomerPhotoArr(customer.customerData.customerPhotos);
-                    console.log(`useEffect ~ customerPhotoArr`, customerPhotoArr);
-                    setCustomerPhotoURL(customerPhotoArr[customerPhotoArr.length - 1])
-                    console.log(`@CodeTropolis ~ useEffect ~ customerPhotoURL`, customerPhotoURL);
-                }
+                setCustomerPhotoArr(customer.customerData.customerPhotos);
+                setCustomerPhotoURL(customerPhotoArr[customerPhotoArr.length - 1]);
+                setIsEditing(customer.customerData.isEditing);
             }
 
 
         });
-    }, [currentCustomerId, customerPhotoArr, customerPhotoURL])
+    }, [isEditing, currentCustomerId, customerPhotoArr])
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -69,6 +65,10 @@ const AddCustomer = ({ navigation }) => {
                         {/* Editing an existing customer so photo should be present. */}
                         {customer.customerData && customerPhotoURL ? (
                             <>
+                                <Text>Is Editing: {isEditing}</Text>
+                                <Text> {currentCustomerId}</Text>
+                                <Text>{customerPhotoURL}</Text>
+
                                 <Image
                                     style={styles.customerImage}
                                     // User may retake pic so if theres a value for customer.picFromCam, show it here, else show customerPhotoURL
@@ -110,22 +110,24 @@ const AddCustomer = ({ navigation }) => {
                                     db.collection('users').doc(currentUserUid).collection('customers').add(values)
 
                                 addOrUpdate.then(async data => {
+                                    const customerId = data.id;
                                     const uri = customer.picFromCam.uri;
-                                    const path = `${currentUserUid}/${data.id}/${Date.now()}.jpg`;
+                                    const path = `${currentUserUid}/${customerId}/${Date.now()}.jpg`;
                                     uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
                                     const response = await fetch(uploadUri);
                                     const blob = await response.blob();
                                     dbStorage.ref(path).put(blob)
                                         .then(() => {
                                             //You can check the image is now uploaded in the storage bucket
+                                            // Add in the customer ID and image link to the customer's doc.
                                             console.log(`${path} has been successfully uploaded.`);
                                             dbStorage.ref(path).getDownloadURL()
                                                 .then(downloadURL => {
                                                     db.collection('users')
                                                         .doc(currentUserUid)
                                                         .collection('customers')
-                                                        .doc(data.id)
-                                                        .update({ id: data.id, customerPhotos: dbFieldValue.arrayUnion(downloadURL) })
+                                                        .doc(customerId)
+                                                        .update({ id: customerId, customerPhotos: dbFieldValue.arrayUnion(downloadURL) })
                                                 })
                                         })
 
