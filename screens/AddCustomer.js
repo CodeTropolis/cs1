@@ -154,8 +154,7 @@ const AddCustomer = ({ navigation }) => {
                                     <TextInput
                                         style={styles.input}
                                         onChangeText={props.handleChange('first_name')}
-                                        // value={customer.customerData ? customer.customerData.first_name : props.values.first_name}
-                                        value={props.values.first_name}
+                                        defaultValue={customer && customer.customerData ? customer.customerData.first_name : null}
                                         placeholder="First name"
                                         placeholderTextColor={placeholderColor}
                                         onBlur={props.handleBlur('first_name')}
