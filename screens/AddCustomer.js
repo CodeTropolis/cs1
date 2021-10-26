@@ -28,6 +28,12 @@ const AddCustomer = ({ navigation }) => {
     const [customerPhotoArr, setCustomerPhotoArr] = useState([]);
     const [customerPhotoURL, setCustomerPhotoURL] = useState('');
 
+    const [savedValues, setSavedValues] = useState(null);
+
+    const initialValues = {
+        first_name: '',
+    }
+
     const placeholderColor = 'gray';
 
     useEffect(() => {
@@ -39,6 +45,9 @@ const AddCustomer = ({ navigation }) => {
                 setCurrentCustomerId(customer.customerData.id);
                 setCustomerPhotoArr(customer.customerData.customerPhotos);
                 setCustomerPhotoURL(customerPhotoArr[customerPhotoArr.length - 1]);
+                setSavedValues({
+                    first_name: customer.customerData.first_name,
+                })
             }
 
 
@@ -143,12 +152,14 @@ const AddCustomer = ({ navigation }) => {
                         <StatusBar style="light" />
                         <Formik
                             // initialValues={{ first_name: '', last_name: '', email: '', phone: '', notes: '' }}
-                            initialValues={{ first_name: '' }}
+                            initialValues={savedValues || initialValues}
                             validationSchema={formSchema}
                             onSubmit={(values, actions) => {
                                 currentCustomerId !== '' ? updateCustomer(values) : saveNewCustomer(values);
                                 actions.resetForm();
-                            }}>
+                            }}
+
+                        >
                             {(props) => (
                                 <View>
                                     <TextInput
