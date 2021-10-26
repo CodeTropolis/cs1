@@ -158,6 +158,7 @@ const AddCustomer = ({ navigation }) => {
                                 currentCustomerId !== '' ? updateCustomer(values) : saveNewCustomer(values);
                                 actions.resetForm();
                             }}
+                            enableReinitialize
                         >
                             {(props) => (
                                 <View>
@@ -208,7 +209,7 @@ const AddCustomer = ({ navigation }) => {
                                         onChangeText={props.handleChange('notes')}
                                         value={props.values.notes}
                                     /> */}
-                                    <Button title='Submit' color='maroon' onPress={props.handleSubmit} />
+                                    <Button disabled={!props.isValid} title='Submit' color='maroon' onPress={props.handleSubmit} />
                                 </View>
                             )}
                         </Formik>
