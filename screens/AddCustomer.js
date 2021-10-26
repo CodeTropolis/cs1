@@ -158,7 +158,6 @@ const AddCustomer = ({ navigation }) => {
                                 currentCustomerId !== '' ? updateCustomer(values) : saveNewCustomer(values);
                                 actions.resetForm();
                             }}
-
                         >
                             {(props) => (
                                 <View>
