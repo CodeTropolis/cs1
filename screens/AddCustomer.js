@@ -62,26 +62,26 @@ const AddCustomer = ({ navigation }) => {
 
 
     const updateCustomer = (values) => {
-        db.collection('users').doc(currentUserUid).collection('customers').doc(currentCustomerId).set(values, { merge: true })
+        return db.collection('users').doc(currentUserUid).collection('customers').doc(currentCustomerId).set(values, { merge: true })
             .then(() => {
-                console.log(`@CT ~ file: AddCustomer.js EDITING CUSTOMER ~ line 134`);
+                return currentCustomerId;
                 // User may or may not update the photo
-                if (customer.picFromCam && customer.picFromCam.uri) {
-                    savePhoto(currentCustomerId)
-                }
+                // if (customer.picFromCam && customer.picFromCam.uri) {
+                //     return savePhoto(currentCustomerId)
+                // }
 
             })
     }
 
     const saveNewCustomer = (values) => {
-        db.collection('users').doc(currentUserUid).collection('customers')
+        return db.collection('users').doc(currentUserUid).collection('customers')
             .add(values)
-            .then(returnData => {
+            .then(async (returnData) => {
                 db.doc(returnData.path).update({ id: returnData.id })
-                // ToDo: No check here. Enforce on UI. so that customer.picFromCam.uri always has a value when creating a new customer. 
-                if (customer.picFromCam.uri) {
-                    savePhoto(returnData.id)
-                }
+                return returnData.id
+                // if (customer.picFromCam.uri) {
+                //     return savePhoto(returnData.id)
+                // }
             });
     }
 
@@ -91,11 +91,10 @@ const AddCustomer = ({ navigation }) => {
         uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
         const response = await fetch(uploadUri);
         const blob = await response.blob();
-        dbStorage.ref(path).put(blob)
+        return await dbStorage.ref(path).put(blob)
             .then(() => {
                 //You can check the image is now uploaded in the storage bucket
-                // Add in the customer ID and image link to the customer's doc.
-                console.log(`${path} has been successfully uploaded.`);
+                // console.log(`${path} has been successfully uploaded.`);
                 dbStorage.ref(path).getDownloadURL()
                     .then(downloadURL => {
                         db.collection('users')
@@ -155,7 +154,13 @@ const AddCustomer = ({ navigation }) => {
                             initialValues={savedValues || initialValues}
                             validationSchema={formSchema}
                             onSubmit={(values, actions) => {
-                                currentCustomerId !== '' ? updateCustomer(values) : saveNewCustomer(values);
+                                const updateOrSave = currentCustomerId !== '' ? updateCustomer(values) : saveNewCustomer(values);
+                                updateOrSave.then(customerId => {
+                                    if (customer.picFromCam && customer.picFromCam.uri) { // Only save if we have a pic from the cam.
+                                        return savePhoto(customerId)
+                                    }
+                                })
+
                                 actions.resetForm();
                             }}
                             enableReinitialize
