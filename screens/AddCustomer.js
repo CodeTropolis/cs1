@@ -85,8 +85,8 @@ const AddCustomer = ({ navigation }) => {
         const blob = await response.blob();
         return await dbStorage.ref(path).put(blob)
             .then(() => {
-                //You can check the image is now uploaded in the storage bucket
-                // console.log(`${path} has been successfully uploaded.`);
+                // You can check the image is now uploaded in the storage bucket
+                // Add the download URL to the customerPhotos array on the customer doc
                 dbStorage.ref(path).getDownloadURL()
                     .then(downloadURL => {
                         db.collection('users')
@@ -106,7 +106,7 @@ const AddCustomer = ({ navigation }) => {
             <SafeAreaView style={styles.container}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View style={styles.inner}>
-                        {/* Editing an existing customer so photo should be present. */}
+                        {/* Editing an existing customer so photo should be present from customer data. */}
                         {customer.customerData && customerPhotoURL ? (
                             <>
                                 {/* In JSX boolean value will not render. */}
@@ -152,7 +152,6 @@ const AddCustomer = ({ navigation }) => {
                                         savePhoto(customerId)
                                     }
                                 })
-
                                 actions.resetForm();
                             }}
                             enableReinitialize
