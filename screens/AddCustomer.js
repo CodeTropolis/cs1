@@ -65,11 +65,6 @@ const AddCustomer = ({ navigation }) => {
         return db.collection('users').doc(currentUserUid).collection('customers').doc(currentCustomerId).set(values, { merge: true })
             .then(() => {
                 return currentCustomerId;
-                // User may or may not update the photo
-                // if (customer.picFromCam && customer.picFromCam.uri) {
-                //     return savePhoto(currentCustomerId)
-                // }
-
             })
     }
 
@@ -79,9 +74,6 @@ const AddCustomer = ({ navigation }) => {
             .then(async (returnData) => {
                 db.doc(returnData.path).update({ id: returnData.id })
                 return returnData.id
-                // if (customer.picFromCam.uri) {
-                //     return savePhoto(returnData.id)
-                // }
             });
     }
 
@@ -157,7 +149,7 @@ const AddCustomer = ({ navigation }) => {
                                 const updateOrSave = currentCustomerId !== '' ? updateCustomer(values) : saveNewCustomer(values);
                                 updateOrSave.then(customerId => {
                                     if (customer.picFromCam && customer.picFromCam.uri) { // Only save if we have a pic from the cam.
-                                        return savePhoto(customerId)
+                                        savePhoto(customerId)
                                     }
                                 })
 
