@@ -26,10 +26,18 @@ const CustomerIdent = ({ navigation }) => {
     }
     const __takePicture = async () => {
         if (!camera) return
-        const photo = await camera.takePictureAsync({ base64: false })
+        // const photo = await camera.takePictureAsync({ base64: false, quality: 0.7 })
+        const photo = await camera.takePictureAsync({ base64: false, quality: 0.7, onPictureSaved: __onPictureSaved })
         setPreviewVisible(true)
+        // setCapturedImage(photo)
+    }
+    // Todo: Does't apply size / ratio to saved image in Firebase storage
+    const __onPictureSaved = photo => {
+        photo.width = 500;
+        photo.height = 375;
         setCapturedImage(photo)
     }
+
     const __usePhoto = () => {
         dispatch(addCustomerImage(capturedImage))
         setPreviewVisible(false)
@@ -72,6 +80,7 @@ const CustomerIdent = ({ navigation }) => {
                     <Camera
                         type={cameraType}
                         flashMode={flashMode}
+                        ratio='4:3'
                         style={{ flex: 1 }}
                         ref={(r) => {
                             camera = r

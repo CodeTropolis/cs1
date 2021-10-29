@@ -82,6 +82,7 @@ const AddCustomer = ({ navigation }) => {
         // foo = 1; is equivalent to window.foo = 1;. 
         // That's not different inside an arrow function than anywhere else.
         const uri = customer.picFromCam.uri;
+        console.log(`@CT ~ file: AddCustomer.js ~ line 85 ~ savePhoto ~ customer.picFromCam`, customer.picFromCam);
         const path = `${currentUserUid}/${customerId}/${Date.now()}.jpg`;
         const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
         const response = await fetch(uploadUri);
