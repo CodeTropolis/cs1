@@ -1,9 +1,11 @@
-import React from 'react'
-import { StyleSheet, Text, Image, View } from 'react-native'
+import React, { useState } from 'react'
+import { StyleSheet, Text, Image, View, ActivityIndicator } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 
 const CustomerListItem = ({ data, _editCustomer }) => {
+
+    const [loading, setLoading] = useState(true);
 
     let customerPhotosArr;
     let latestPhotoURL;
@@ -13,9 +15,19 @@ const CustomerListItem = ({ data, _editCustomer }) => {
         latestPhotoURL = customerPhotosArr[customerPhotosArr.length - 1];
     }
 
+    const _onLoadEnd = () => {
+        setLoading(false)
+    }
+
     return (
         <TouchableOpacity style={styles.list} onPress={() => _editCustomer(data)} >
-            <Image style={styles.customerImage} source={{ uri: latestPhotoURL }} />
+
+            <Image style={styles.customerImage} source={{ uri: latestPhotoURL }} onLoadEnd={_onLoadEnd} />
+            <ActivityIndicator
+                style={styles.activityIndicator}
+                animating={loading}
+            />
+
             <View style={styles.text}>
                 <Text>{data.first_name} {data.last_name}</Text>
                 <Text>Notes: {data.notes}</Text>
@@ -44,6 +56,10 @@ const styles = StyleSheet.create({
         height: 100,
         width: 100,
         borderRadius: 50,
+    },
+    activityIndicator: {
+        position: 'absolute',
+        left: 40,
     },
     text: { marginLeft: 30 }
 })
