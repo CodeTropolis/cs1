@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, Image, View, ActivityIndicator } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import {
     Menu,
     MenuOptions,
@@ -8,7 +7,6 @@ import {
     MenuTrigger,
 } from 'react-native-popup-menu';
 import { Icon } from "react-native-elements"
-
 
 const CustomerListItem = ({ data, _editCustomer, _deleteCustomer }) => {
 
@@ -64,7 +62,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        // justifyContent: 'space-around',
         padding: 10,
         marginTop: 8,
         backgroundColor: 'white',
