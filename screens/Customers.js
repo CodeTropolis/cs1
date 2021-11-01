@@ -13,8 +13,6 @@ const Customers = ({ navigation }) => {
 
     const dispatch = useDispatch();
     // const customer = useSelector((state) => state.customer.value);
-
-
     const [isLoadingCustomers, setIsLoadingCustomers] = useState(true);
     const [customers, setCustomers] = useState([]);
 

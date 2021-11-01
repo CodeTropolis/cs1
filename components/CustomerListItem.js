@@ -1,6 +1,13 @@
 import React, { useState } from 'react'
 import { StyleSheet, Text, Image, View, ActivityIndicator } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import {
+    Menu,
+    MenuOptions,
+    MenuOption,
+    MenuTrigger,
+} from 'react-native-popup-menu';
+import { Icon } from "react-native-elements"
 
 
 const CustomerListItem = ({ data, _editCustomer }) => {
@@ -20,7 +27,7 @@ const CustomerListItem = ({ data, _editCustomer }) => {
     }
 
     return (
-        <TouchableOpacity style={styles.list} onPress={() => _editCustomer(data)} >
+        <View style={styles.list}>
 
             <Image style={styles.customerImage} source={{ uri: latestPhotoURL }} onLoadEnd={_onLoadEnd} />
             <ActivityIndicator
@@ -32,7 +39,23 @@ const CustomerListItem = ({ data, _editCustomer }) => {
                 <Text>{data.first_name} {data.last_name}</Text>
                 <Text>Notes: {data.notes}</Text>
             </View>
-        </TouchableOpacity>
+
+            <Menu style={styles.actionMenu}>
+                {/* <MenuTrigger text='Select action' /> */}
+                <MenuTrigger>
+                    <Icon name="menu" size={20} type="Ionicons" />
+                </MenuTrigger>
+                <MenuOptions>
+                    <MenuOption onSelect={() => _editCustomer(data)} text='Edit' />
+                    <MenuOption onSelect={() => alert(`Delete`)} >
+                        <Text style={{ color: 'red' }}>Delete</Text>
+                    </MenuOption>
+                    {/* <MenuOption onSelect={() => alert(`Not called`)} disabled={true} text='Disabled' /> */}
+                </MenuOptions>
+            </Menu>
+
+
+        </View>
     )
 }
 
@@ -60,6 +83,10 @@ const styles = StyleSheet.create({
     activityIndicator: {
         position: 'absolute',
         left: 40,
+    },
+    actionMenu: {
+        position: 'absolute',
+        right: 40,
     },
     text: { marginLeft: 30 }
 })
