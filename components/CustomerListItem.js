@@ -10,7 +10,7 @@ import {
 import { Icon } from "react-native-elements"
 
 
-const CustomerListItem = ({ data, _editCustomer }) => {
+const CustomerListItem = ({ data, _editCustomer, _deleteCustomer }) => {
 
     const [loading, setLoading] = useState(true);
 
@@ -30,10 +30,7 @@ const CustomerListItem = ({ data, _editCustomer }) => {
         <View style={styles.list}>
 
             <Image style={styles.customerImage} source={{ uri: latestPhotoURL }} onLoadEnd={_onLoadEnd} />
-            <ActivityIndicator
-                style={styles.activityIndicator}
-                animating={loading}
-            />
+            <ActivityIndicator style={styles.activityIndicator} animating={loading} />
 
             <View style={styles.text}>
                 <Text>{data.first_name} {data.last_name}</Text>
@@ -47,7 +44,7 @@ const CustomerListItem = ({ data, _editCustomer }) => {
                 </MenuTrigger>
                 <MenuOptions>
                     <MenuOption onSelect={() => _editCustomer(data)} text='Edit' />
-                    <MenuOption onSelect={() => alert(`Delete`)} >
+                    <MenuOption onSelect={() => _deleteCustomer(data)} >
                         <Text style={{ color: 'red' }}>Delete</Text>
                     </MenuOption>
                     {/* <MenuOption onSelect={() => alert(`Not called`)} disabled={true} text='Disabled' /> */}

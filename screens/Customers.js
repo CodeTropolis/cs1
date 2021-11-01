@@ -4,7 +4,7 @@ import CustomerListItem from '../components/CustomerListItem'
 import { Button, Input, Image, Icon } from "react-native-elements"
 import { AntDesign } from '@expo/vector-icons'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { auth, db } from '../firebase';
+import { auth, db, dbStorage } from '../firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCustomerImage } from '../features/customerSlice';
 import { editCustomer } from '../features/customerSlice';
@@ -15,12 +15,14 @@ const Customers = ({ navigation }) => {
     // const customer = useSelector((state) => state.customer.value);
     const [isLoadingCustomers, setIsLoadingCustomers] = useState(true);
     const [customers, setCustomers] = useState([]);
+    const [currentUserUid, setCurrentUserUid] = useState('');
 
     useEffect(() => {
         const authSubscriber = auth.onAuthStateChanged(user => {
             if (!user) {
                 navigation.navigate('Login')
             }
+            setCurrentUserUid(user.uid)
             const snapshotSubscriber = db.collection('users')
                 .doc(user.uid)
                 .collection('customers')
@@ -71,6 +73,15 @@ const Customers = ({ navigation }) => {
         navigation.navigate('AddCustomer')
     }
 
+    const _deleteCustomer = (customer) => {
+        customer.customerPhotos.forEach(url => {
+            const _ref = dbStorage.refFromURL(url)
+            dbStorage.ref(_ref.fullPath).delete().then(() => {
+                db.collection('users').doc(currentUserUid).collection('customers').doc(customer.id).delete()
+            })
+        })
+    }
+
     if (!isLoadingCustomers) {
         if (customers.length > 0) {
             return (
@@ -79,7 +90,7 @@ const Customers = ({ navigation }) => {
                         {customers.map((customer, i) => {
                             return (
                                 // Or wrap this in TouchableOpacity and call _editCustomer on its onPress
-                                <CustomerListItem key={i} data={customer} _editCustomer={_editCustomer} />
+                                <CustomerListItem key={i} data={customer} _editCustomer={_editCustomer} _deleteCustomer={_deleteCustomer} />
                             )
                         })}
                     </ScrollView>
