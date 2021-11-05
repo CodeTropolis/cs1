@@ -7,6 +7,8 @@ import {
     MenuTrigger,
 } from 'react-native-popup-menu';
 import { Icon } from "react-native-elements"
+import * as SMS from 'expo-sms';
+import Expo from 'expo';
 
 const CustomerListItem = ({ data, _editCustomer, _deleteCustomer }) => {
 
@@ -22,6 +24,21 @@ const CustomerListItem = ({ data, _editCustomer, _deleteCustomer }) => {
 
     const _onLoadEnd = () => {
         setLoading(false)
+    }
+
+    const sendText = async () => {
+        const { status } = await Expo.Permissions.askAsync(Expo.Permissions.SMS);
+        const isAvailable = await SMS.isAvailableAsync();
+        if (isAvailable) {
+            // do your SMS stuff here
+            const { result } = await SMS.sendSMSAsync(
+                ['3148747973'],
+                'My sample HelloWorld message',
+            )
+        } else {
+            //There's no SMS available on this device
+        }
+
     }
 
     return (
@@ -41,6 +58,7 @@ const CustomerListItem = ({ data, _editCustomer, _deleteCustomer }) => {
                     <Icon name="menu" size={20} type="Ionicons" />
                 </MenuTrigger>
                 <MenuOptions>
+                    <MenuOption onSelect={() => sendText} text='Send Text' />
                     <MenuOption onSelect={() => _editCustomer(data)} text='Edit' />
                     <MenuOption onSelect={() => _deleteCustomer(data)} >
                         <Text style={{ color: 'red' }}>Delete</Text>
