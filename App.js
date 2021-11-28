@@ -29,49 +29,49 @@ export default function App() {
   const [checking, setChecking] = useState(false);
   const [subscriptionIsExpired, setSubscriptionIsExpired] = useState(true);
 
-  // useEffect(() => {
-  //   IAP.initConnection()
-  //     .then(async () => {
-  //       console.log('@CodeTropolis Connected to store.');
-  //       await IAP.getPurchaseHistory()
-  //         .then(async res => {
-  //           if (res) {
-  //             const receipt = res[res.length - 1].transactionReceipt // The most recent receipt.
-  //             const subscriptionStatus = await validateReceipt(receipt);
-  //             if (subscriptionStatus.isExpired) {
-  //               setSubscriptionIsExpired(true);
-  //               Alert.alert(
-  //                 "Subscription Expired",
-  //                 "Please subscribe.",
-  //                 [
-  //                   {
-  //                     text: "Ok",
-  //                     // https://stackoverflow.com/a/61355164
-  //                     onPress: () => RootNavigation.navigate('Subscribe ', null),
-  //                     style: "cancel"
-  //                   },
-  //                 ]
-  //               );
-  //             } else {
-  //               setSubscriptionIsExpired(false);
-  //             }
-  //             setChecking(false);
+  useEffect(() => {
+    IAP.initConnection()
+      .then(async () => {
+        console.log('@CodeTropolis Connected to store.');
+        await IAP.getPurchaseHistory()
+          .then(async res => {
+            if (res) {
+              const receipt = res[res.length - 1].transactionReceipt // The most recent receipt.
+              const subscriptionStatus = await validateReceipt(receipt);
+              if (subscriptionStatus.isExpired) {
+                setSubscriptionIsExpired(true);
+                Alert.alert(
+                  "Subscription Expired",
+                  "Please subscribe.",
+                  [
+                    {
+                      text: "Ok",
+                      // https://stackoverflow.com/a/61355164
+                      onPress: () => RootNavigation.navigate('Subscribe ', null),
+                      style: "cancel"
+                    },
+                  ]
+                );
+              } else {
+                setSubscriptionIsExpired(false);
+              }
+              setChecking(false);
 
-  //           }
-  //         })
-  //         .catch((error) => {
-  //           console.log(`@CodeTropolis ~ .then ~ error getting purchase history`, JSON.stringify(error));
-  //           // ToDo: This error occurs on new device. Is this the best way to handle?
-  //           // Might be new device if no results.
-  //           setSubscriptionIsExpired(true);
-  //           setChecking(false);
-  //         })
+            }
+          })
+          .catch((error) => {
+            console.log(`@CodeTropolis ~ .then ~ error getting purchase history`, JSON.stringify(error));
+            // ToDo: This error occurs on new device. Is this the best way to handle?
+            // Might be new device if no results.
+            setSubscriptionIsExpired(true);
+            setChecking(false);
+          })
 
-  //     })
-  //     .catch(() => {
-  //       console.log('@CodeTropolis Error connecting to store.');
-  //     });
-  // }, []);
+      })
+      .catch(() => {
+        console.log('@CodeTropolis Error connecting to store.');
+      });
+  }, []);
 
 
   if (checking) {
@@ -85,8 +85,8 @@ export default function App() {
       <Provider store={store}>
         <MenuProvider>
           <NavigationContainer>
-            {/* <Stack.Navigator initialRouteName={subscriptionIsExpired ? 'Subscribe' : 'Customers'} screenOptions={globalScreenOptions}> */}
-            <Stack.Navigator initialRouteName={'Customers'} screenOptions={globalScreenOptions}>
+            <Stack.Navigator initialRouteName={subscriptionIsExpired ? 'Subscribe' : 'Customers'} screenOptions={globalScreenOptions}>
+              {/* <Stack.Navigator initialRouteName={'Customers'} screenOptions={globalScreenOptions}> */}
               <Stack.Screen name='Register' component={Register} />
               <Stack.Screen name='Login' component={Login} />
               <Stack.Screen name='Customers' component={Customers} />
