@@ -28,7 +28,9 @@ const CustomerListItem = ({ data, _editCustomer, _deleteCustomer }) => {
 
     const sendText = async () => {
         const { status } = await Expo.Permissions.askAsync(Expo.Permissions.SMS);
+        console.log(`@CT ~ file: CustomerListItem.js ~ line 31 ~ sendText ~ status`, status);
         const isAvailable = await SMS.isAvailableAsync();
+        console.log(`@CT ~ file: CustomerListItem.js ~ line 33 ~ sendText ~ isAvailable`, isAvailable);
         if (isAvailable) {
             // do your SMS stuff here
             const { result } = await SMS.sendSMSAsync(
