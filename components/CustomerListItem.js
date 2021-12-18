@@ -8,7 +8,8 @@ import {
 } from 'react-native-popup-menu';
 import { Icon } from "react-native-elements"
 import * as SMS from 'expo-sms';
-import Expo from 'expo';
+
+
 
 const CustomerListItem = ({ data, _editCustomer, _deleteCustomer }) => {
 
@@ -27,18 +28,12 @@ const CustomerListItem = ({ data, _editCustomer, _deleteCustomer }) => {
     }
 
     const sendText = async () => {
-        const { status } = await Expo.Permissions.askAsync(Expo.Permissions.SMS);
-        console.log(`@CT ~ file: CustomerListItem.js ~ line 31 ~ sendText ~ status`, status);
         const isAvailable = await SMS.isAvailableAsync();
-        console.log(`@CT ~ file: CustomerListItem.js ~ line 33 ~ sendText ~ isAvailable`, isAvailable);
+        console.log(`@CT ~ file: CustomerListItem.js ~ line 32 ~ sendText ~ isAvailable`, isAvailable);
         if (isAvailable) {
             // do your SMS stuff here
-            const { result } = await SMS.sendSMSAsync(
-                ['3148747973'],
-                'My sample HelloWorld message',
-            )
         } else {
-            //There's no SMS available on this device
+            // misfortune... there's no SMS available on this device
         }
 
     }
@@ -60,7 +55,7 @@ const CustomerListItem = ({ data, _editCustomer, _deleteCustomer }) => {
                     <Icon name="menu" size={20} type="Ionicons" />
                 </MenuTrigger>
                 <MenuOptions>
-                    <MenuOption onSelect={() => sendText} text='Send Text' />
+                    <MenuOption onSelect={() => sendText()} text='Send Text' />
                     <MenuOption onSelect={() => _editCustomer(data)} text='Edit' />
                     <MenuOption onSelect={() => _deleteCustomer(data)} >
                         <Text style={{ color: 'red' }}>Delete</Text>
