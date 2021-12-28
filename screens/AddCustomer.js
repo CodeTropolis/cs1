@@ -110,7 +110,7 @@ const AddCustomer = ({ navigation }) => {
             <SafeAreaView style={styles.container}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View style={styles.inner}>
-                        {/* Editing an existing customer so photo should be present from customer data. */}
+                        {/* Editing an existing customer so photo should be present in customer data. */}
                         {customer.customerData && customerPhotoURL ? (
                             <>
                                 {/* In JSX boolean value will not render. */}
